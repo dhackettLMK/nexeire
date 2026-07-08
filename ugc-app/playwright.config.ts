@@ -38,12 +38,6 @@ export default defineConfig({
       ADMIN_EMAILS: adminEmails,
       OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
       APP_BASE_URL: process.env.APP_BASE_URL ?? `http://127.0.0.1:${port}`,
-      STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY ?? "",
-      STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET ?? "",
-      STRIPE_CREDIT_BUNDLE_CREDITS:
-        process.env.STRIPE_CREDIT_BUNDLE_CREDITS ?? "10",
-      STRIPE_CREDIT_BUNDLE_AMOUNT_CENTS:
-        process.env.STRIPE_CREDIT_BUNDLE_AMOUNT_CENTS ?? "4900",
       NEXT_PUBLIC_ENABLE_AGENTATION: "false",
     },
   },
