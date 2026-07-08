@@ -1,0 +1,25 @@
+#:schema https://conductor.build/schemas/settings.repo.schema.json
+
+file_include_globs = "ugc-app/.env.local\n"
+
+[scripts]
+setup = """
+cd ugc-app
+if [ ! -f .env.local ]; then
+  cp .env.example .env.local
+fi
+pnpm install
+"""
+run = "cd ugc-app && pnpm dev --port $CONDUCTOR_PORT"
+archive = "rm -rf ugc-app/.next"
+run_mode = "concurrent"
+
+[prompts]
+create_pr = """
+Before creating or updating a PR for this repository:
+- Run the app locally and use browser automation such as Playwright, Browser Use, or the available Conductor browser tooling to capture screenshots of the user-visible feature changes implemented on the branch.
+- Prefer adding screenshots directly to the PR description or to a PR comment using GitHub's attachment flow so they render inline in the PR.
+- Do not commit screenshots, image artifacts, reports, traces, or other PR evidence files when attachment upload works.
+- If GitHub attachment upload is blocked, the fallback is to replace the single fixed file `docs/screenshots/pr-screenshot.png`, commit only that file, and link the GitHub `blob` page for that file from the PR description or a PR comment. Do not use plain `raw.githubusercontent.com` URLs for private repositories, and do not add per-feature or per-PR screenshot filenames.
+- If screenshots cannot be captured or attached by either path, explain the blocker clearly in the PR body or a PR comment.
+"""

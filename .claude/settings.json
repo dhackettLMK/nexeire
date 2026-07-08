@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(gh pr create*)",
+            "command": "echo \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"additionalContext\\\":\\\"PR screenshot rule: before finalizing this PR, use Playwright to capture screenshots of the feature(s) built on this branch (browser_navigate + browser_take_screenshot), then add the relevant screenshot to the PR description or a PR comment using GitHub's attachment flow. Do not commit screenshots when attachment upload works. If upload is blocked, replace the single fixed file docs/screenshots/pr-screenshot.png, commit only that file, and link the GitHub blob page for that file from the PR description or a PR comment; do not use raw.githubusercontent.com URLs for private repos. If you have not captured and attached or linked screenshots yet, cancel this command, do that first, then re-run gh pr create.\\\"}}\""
+          }
+        ]
+      }
+    ]
+  }
+}
