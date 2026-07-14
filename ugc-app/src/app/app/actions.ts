@@ -35,6 +35,8 @@ import {
   runCampaignGenerationWorker,
   runVideoOutputRetryWorker,
 } from "@/lib/videos/background-generation";
+import { sweepStaleRenderJobs } from "@/lib/providers/stale-jobs";
+import { pollRemotionRenders } from "@/lib/videos/render-progress";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
 const assetTagSet = new Set<string>(assetTags);
@@ -493,6 +495,32 @@ export async function generateVideosAction(formData: FormData) {
   });
   revalidateCustomerMvpPaths();
   redirect("/app/inbox?generated=1");
+}
+
+// Powers the in-app polling loop on the inbox page: while a video is
+// `rendering`, the client calls this every ~30s so a detached Remotion
+// render's completion (or failure) shows up without waiting on the daily
+// cron. Scoped to the caller's own organization so an authenticated user
+// can only nudge their own render jobs.
+export async function pollRendersAction() {
+  const { organization } = await requireOrganization("/app/inbox");
+  const serviceSupabase = getServiceRoleClient();
+
+  const swept = await sweepStaleRenderJobs(serviceSupabase, {
+    organizationId: organization.id,
+  });
+  const results = await pollRemotionRenders(serviceSupabase, {
+    organizationId: organization.id,
+  });
+
+  revalidateCustomerMvpPaths();
+
+  return {
+    swept: swept.swept,
+    running: results.filter((result) => result.status === "running").length,
+    ready: results.filter((result) => result.status === "ready").length,
+    failed: results.filter((result) => result.status === "failed").length,
+  };
 }
 
 export async function retryVideoOutputAction(videoOutputId: string) {
