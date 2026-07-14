@@ -66,4 +66,15 @@ describe("render provider", () => {
 
     expect(configuredRenderProvider()).toBe("remotion");
   });
+
+  it("refuses synchronous Remotion renders in production without a Blob token", async () => {
+    delete process.env.RENDER_PROVIDER;
+    delete process.env.BLOB_READ_WRITE_TOKEN;
+    process.env.VERCEL = "1";
+    process.env.NODE_ENV = "production";
+
+    await expect(startRender(renderRequest)).rejects.toThrow(
+      /BLOB_READ_WRITE_TOKEN is required in production/,
+    );
+  });
 });

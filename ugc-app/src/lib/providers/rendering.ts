@@ -41,12 +41,20 @@ export async function startRender(request: RenderRequest): Promise<RenderResult>
 }
 
 async function startRemotionRender(request: RenderRequest): Promise<RenderResult> {
+  const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+
+  if (!blobToken && (process.env.VERCEL || process.env.NODE_ENV === "production")) {
+    throw new Error(
+      "BLOB_READ_WRITE_TOKEN is required in production: synchronous Remotion renders exceed function limits.",
+    );
+  }
+
   const entryPoint = path.join(process.cwd(), "src/remotion/index.ts");
   const bundle = await resolveRemotionBundle(entryPoint);
   const estimatedCostCents = Number(
     process.env.REMOTION_ESTIMATED_CENTS_PER_VIDEO ?? "80",
   );
-  const detached = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const detached = Boolean(blobToken);
   const outputFile = `/tmp/${request.videoOutputId}.mp4`;
 
   const remotionVercel = await import("@remotion/vercel");
@@ -80,7 +88,7 @@ async function startRemotionRender(request: RenderRequest): Promise<RenderResult
         ),
         detached: true,
         vercelBlob: {
-          blobToken: process.env.BLOB_READ_WRITE_TOKEN!,
+          blobToken: blobToken!,
           access: "public",
           blobPath: `renders/${request.organizationId}/${request.videoOutputId}.mp4`,
         },
