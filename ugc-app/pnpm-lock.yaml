@@ -28,7 +28,7 @@ importers:
         version: 4.0.481(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@remotion/vercel':
         specifier: ^4.0.481
-        version: 4.0.481(@vercel/sandbox@2.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 4.0.481(@vercel/sandbox@1.6.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@rspack/binding':
         specifier: 1.7.11
         version: 1.7.11
@@ -42,8 +42,8 @@ importers:
         specifier: ^2.108.1
         version: 2.108.1
       '@vercel/sandbox':
-        specifier: ^2.2.1
-        version: 2.2.1
+        specifier: 1.6.0
+        version: 1.6.0
       agentation:
         specifier: ^3.0.2
         version: 3.0.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -2350,8 +2350,8 @@ packages:
     resolution: {integrity: sha512-UycprH3T6n3jH0k44NHMa7pnFHGu/N05MjojYr+Mc6I7obkoLIJujSWwin1pCvdy/eOxrI/l3uDLQsmcrOb4ug==}
     engines: {node: '>= 20'}
 
-  '@vercel/sandbox@2.2.1':
-    resolution: {integrity: sha512-IqFYVEsPilXb28VbpTtrP5UkMgVAyQlp77zcLJUgCUo1yEbjJiClGS6sEqGjkAukhbLGS+T2vG3ZOgzSzUTyZg==}
+  '@vercel/sandbox@1.6.0':
+    resolution: {integrity: sha512-T204S3RZIdo+BCR5gpErTQBYz+ruXjTMRiZyf+HV/UQeKjPKAVKWu27T65kahDvVvJrbadHhxR2Cds28rXXF/Q==}
 
   '@vitejs/plugin-react@6.0.2':
     resolution: {integrity: sha512-DlSMqo4WhThw4vB8Mpn0Woe9J+Jfq1geJ61AKW0QEgLzGMNwtIMdxbDUzLxcun8W7NbJO0e2Jg/Nxm3cCSVzzg==}
@@ -2439,9 +2439,6 @@ packages:
 
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
-
-  '@workflow/serde@4.1.0-beta.2':
-    resolution: {integrity: sha512-8kkeoQKLDaKXefjV5dbhBj2aErfKp1Mc4pb6tj8144cF+Em5SPbyMbyLCHp+BVrFfFVCBluCtMx+jjvaFVZGww==}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -5194,6 +5191,9 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
+  zod@3.24.4:
+    resolution: {integrity: sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg==}
+
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
@@ -6902,10 +6902,10 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
       remotion: 4.0.481(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
 
-  '@remotion/vercel@4.0.481(@vercel/sandbox@2.2.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@remotion/vercel@4.0.481(@vercel/sandbox@1.6.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@remotion/renderer': 4.0.481(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@vercel/sandbox': 2.2.1
+      '@vercel/sandbox': 1.6.0
       remotion: 4.0.481(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
     transitivePeerDependencies:
       - bufferutil
@@ -7415,19 +7415,17 @@ snapshots:
 
   '@vercel/oidc@3.2.0': {}
 
-  '@vercel/sandbox@2.2.1':
+  '@vercel/sandbox@1.6.0':
     dependencies:
       '@vercel/oidc': 3.2.0
-      '@workflow/serde': 4.1.0-beta.2
       async-retry: 1.3.3
-      jose: 6.2.3
       jsonlines: 0.1.1
       ms: 2.1.3
       picocolors: 1.1.1
       tar-stream: 3.1.7
       undici: 7.27.2
       xdg-app-paths: 5.1.0
-      zod: 4.4.3
+      zod: 3.24.4
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -7553,8 +7551,6 @@ snapshots:
     dependencies:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
-
-  '@workflow/serde@4.1.0-beta.2': {}
 
   '@xtuc/ieee754@1.2.0': {}
 
@@ -10555,6 +10551,8 @@ snapshots:
   zod-validation-error@4.0.2(zod@4.4.3):
     dependencies:
       zod: 4.4.3
+
+  zod@3.24.4: {}
 
   zod@3.25.76: {}
 

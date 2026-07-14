@@ -29,7 +29,7 @@
     "@rspack/core": "1.7.11",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
-    "@vercel/sandbox": "^2.2.1",
+    "@vercel/sandbox": "1.6.0",
     "agentation": "^3.0.2",
     "ai": "^6.0.205",
     "class-variance-authority": "^0.7.1",
