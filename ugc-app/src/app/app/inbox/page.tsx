@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Download, GitBranch, Inbox, RotateCcw } from "lucide-react";
 import { retryVideoOutputAction } from "@/app/app/actions";
+import { RenderPollingBridge } from "@/components/videos/render-polling";
 import { signedUrlTtlSeconds } from "@/lib/assets/validation";
 import { canRetryVideo, type VideoStatus } from "@/lib/batches/rules";
 import { requireOrganization } from "@/lib/customer/organization";
@@ -174,8 +175,13 @@ export default async function InboxPage() {
     }),
   );
 
+  const hasRenderingVideos = signedOutputs.some(
+    (output) => output.status === "rendering",
+  );
+
   return (
     <div className="grid gap-8">
+      <RenderPollingBridge active={hasRenderingVideos} />
       <PageHeader
         eyebrow="Library"
         title="Your videos"
