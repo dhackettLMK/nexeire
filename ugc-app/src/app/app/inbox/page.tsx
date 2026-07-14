@@ -4,6 +4,7 @@ import { retryVideoOutputAction } from "@/app/app/actions";
 import { RenderPollingBridge } from "@/components/videos/render-polling";
 import { signedUrlTtlSeconds } from "@/lib/assets/validation";
 import { canRetryVideo, type VideoStatus } from "@/lib/batches/rules";
+import { staleRenderMessage } from "@/lib/providers/stale-jobs";
 import { requireOrganization } from "@/lib/customer/organization";
 import { videoDownloadUrl } from "@/lib/videos/downloads";
 import { PageHeader } from "@/components/ui/page-header";
@@ -196,7 +197,9 @@ export default async function InboxPage() {
                 status: output.status as VideoStatus,
                 retryCount: output.retry_count,
                 maxRetries: output.max_retries,
-              });
+              }) ||
+                (output.status === "failed" &&
+                  output.error_message === staleRenderMessage);
 
               return (
                 <article
