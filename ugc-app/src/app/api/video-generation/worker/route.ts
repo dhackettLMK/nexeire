@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { sweepStaleRenderJobs } from "@/lib/providers/stale-jobs";
+import { getServiceRoleClient } from "@/lib/supabase/service-role";
 import {
   runCampaignGenerationWorker,
   runQueuedCampaignGenerationWorker,
@@ -48,6 +50,8 @@ async function handleWorkerRequest(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
+
+  await sweepStaleRenderJobs(getServiceRoleClient());
 
   const url = new URL(request.url);
   const payload = await requestPayload(request);
