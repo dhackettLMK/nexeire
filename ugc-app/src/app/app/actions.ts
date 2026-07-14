@@ -35,7 +35,7 @@ import {
   runCampaignGenerationWorker,
   runVideoOutputRetryWorker,
 } from "@/lib/videos/background-generation";
-import { sweepStaleRenderJobs } from "@/lib/providers/stale-jobs";
+import { staleRenderMessage, sweepStaleRenderJobs } from "@/lib/providers/stale-jobs";
 import { pollRemotionRenders } from "@/lib/videos/render-progress";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
@@ -527,7 +527,7 @@ export async function retryVideoOutputAction(videoOutputId: string) {
   const { supabase, organization } = await requireOrganization("/app/inbox");
   const { data: video, error: videoError } = await supabase
     .from("video_outputs")
-    .select("id,status,retry_count,max_retries")
+    .select("id,status,retry_count,max_retries,error_message")
     .eq("id", videoOutputId)
     .eq("organization_id", organization.id)
     .single();
@@ -536,7 +536,13 @@ export async function retryVideoOutputAction(videoOutputId: string) {
     throw new Error("Video not found");
   }
 
-  if (
+  // Stale-sweep failures are infrastructure faults (orphaned/timed-out
+  // renders), not bad output, so they do not consume retry attempts.
+  const isInfraFailure =
+    video.status === "failed" && video.error_message === staleRenderMessage;
+
+if (
+    !isInfraFailure &&
     !canRetryVideo({
       status: video.status as VideoStatus,
       retryCount: video.retry_count,
@@ -546,7 +552,9 @@ export async function retryVideoOutputAction(videoOutputId: string) {
     throw new Error("Retry limit reached or video is not failed");
   }
 
-  const retryAttempt = nextRetryCount({
+  const retryAttempt = isInfraFailure
+    ? video.retry_count
+    : nextRetryCount({
     status: video.status as VideoStatus,
     retryCount: video.retry_count,
     maxRetries: video.max_retries,

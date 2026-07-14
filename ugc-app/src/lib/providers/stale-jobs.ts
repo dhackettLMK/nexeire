@@ -3,7 +3,7 @@ import { summarizeBatchStatus } from "@/lib/batches/rules";
 
 type ServiceSupabaseClient = SupabaseClient;
 
-const staleRenderMessage = "Render timed out or was orphaned (stale-job sweep)";
+export const staleRenderMessage = "Render timed out or was orphaned (stale-job sweep)";
 
 type StaleJobRow = {
   id: string;
@@ -40,7 +40,7 @@ export async function sweepStaleRenderJobs(
     .eq("provider", "remotion")
     .eq("job_type", "render")
     .in("status", ["queued", "running"])
-    .lt("created_at", cutoff);
+    .lt("updated_at", cutoff);
 
   if (options?.organizationId) {
     query = query.eq("organization_id", options.organizationId);
