@@ -134,17 +134,14 @@ function AssetLink({
   );
 }
 
-function AssetCard({ asset, index }: { asset: SignedAsset; index: number }) {
+function AssetCard({ asset }: { asset: SignedAsset }) {
   const updateAction = updateOrganizationAssetAction.bind(null, asset.id);
   const deleteAction = deleteOrganizationAssetAction.bind(null, asset.id);
   const updateFormId = `asset_update_${asset.id}`;
   const tags = asset.tags ?? [];
 
   return (
-    <Card
-      className="app-rise-in grid overflow-hidden p-0"
-      style={{ animationDelay: `${Math.min(index, 7) * 70}ms` }}
-    >
+    <Card className="grid overflow-hidden p-0">
       <div className="aspect-video bg-muted ring-1 ring-inset ring-primary/10">
         {asset.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -406,8 +403,8 @@ export default async function AssetsPage() {
 
       {signedAssets.length > 0 ? (
         <section className="grid gap-4 xl:grid-cols-2">
-          {signedAssets.map((asset, index) => (
-            <AssetCard key={asset.id} asset={asset} index={index} />
+          {signedAssets.map((asset) => (
+            <AssetCard key={asset.id} asset={asset} />
           ))}
         </section>
       ) : (

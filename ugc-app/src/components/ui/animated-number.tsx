@@ -11,7 +11,7 @@ import * as React from "react";
 export function AnimatedNumber({
   value,
   suffix = "",
-  duration = 900,
+  duration = 500,
   className,
 }: {
   value: number;

@@ -195,7 +195,7 @@ export default async function InboxPage() {
       {signedOutputs.length > 0 ? (
         <Card className="overflow-hidden p-0">
           <div className="divide-y divide-border">
-            {signedOutputs.map((output, index) => {
+            {signedOutputs.map((output) => {
               const retryAction = retryVideoOutputAction.bind(null, output.id);
               const retryable = canRetryVideo({
                 status: output.status as VideoStatus,
@@ -208,8 +208,7 @@ export default async function InboxPage() {
               return (
                 <article
                   key={output.id}
-                  className="app-rise-in grid gap-5 px-5 py-5 md:grid-cols-[minmax(0,1fr)_180px]"
-                  style={{ animationDelay: `${Math.min(index, 7) * 60}ms` }}
+                  className="grid gap-5 px-5 py-5 md:grid-cols-[minmax(0,1fr)_180px]"
                 >
                   <div className="flex min-w-0 flex-col gap-4">
                     <div>

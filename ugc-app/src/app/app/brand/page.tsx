@@ -109,8 +109,8 @@ export default async function BrandPage() {
         description="Answer these prompts once. The saved profile becomes the reusable source for scripts, asset requests, and future video generation."
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="app-stagger grid gap-5">
-          <form action={saveBrandProfileAction} className="app-stagger grid gap-4">
+        <section className="grid gap-5">
+          <form action={saveBrandProfileAction} className="grid gap-4">
             {brandIntakeQuestions.map((question, index) => (
               <Card key={question.name} className="grid gap-4 p-5">
                 <div className="flex items-start gap-3">
