@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { isSupabaseConfigured } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { TitleAccent } from "@/components/ui/page-header";
 import { LoginForm } from "./login-form";
 
@@ -45,11 +46,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
       <div className="app-rise-in w-full max-w-md">
         <div className="mb-8">
-          <Link
-            href="/"
-            className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.32em] text-primary"
-          >
-            Nexeire
+          <Link href="/" className="inline-flex items-center gap-2.5">
+            <BrandMark size={34} />
+            <span className="text-gradient-brand text-xl font-bold tracking-tight">
+              nexeire
+            </span>
           </Link>
           <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-foreground">
             Welcome <TitleAccent>back.</TitleAccent>

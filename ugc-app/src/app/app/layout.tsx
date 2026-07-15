@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LogOut } from "lucide-react";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { buttonClasses } from "@/components/ui/button";
 import {
   getCurrentOrganizationForUser,
@@ -30,17 +31,16 @@ export default async function AppLayout({
 
   return (
     <div className="app-canvas min-h-dvh">
-      <MobileNav
-        items={visibleNavItems}
-        orgName={orgName}
-        orgInitial={orgInitial}
-      />
+      <MobileNav items={visibleNavItems} orgName={orgName} />
       <aside className="app-glass fixed inset-y-0 left-0 z-20 hidden w-[17rem] flex-col border-r border-border/70 px-4 py-6 lg:flex">
         <Link href="/app" className="group block rounded-2xl px-2 py-1">
-          <p className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.32em] text-primary">
-            Nexeire
-          </p>
-          <div className="mt-3 flex items-center gap-3">
+          <span className="flex items-center gap-2.5">
+            <BrandMark size={30} />
+            <span className="text-gradient-brand text-xl font-bold tracking-tight">
+              nexeire
+            </span>
+          </span>
+          <div className="mt-4 flex items-center gap-3">
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm">
               {orgInitial}
             </span>

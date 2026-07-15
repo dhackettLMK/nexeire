@@ -202,6 +202,14 @@ a {
   text-align: center;
 }
 
+.landing-logo {
+  width: clamp(56px, 7vw, 76px);
+  height: auto;
+  margin-bottom: clamp(20px, 3vw, 32px);
+  filter: drop-shadow(0 6px 24px rgba(74, 82, 242, 0.28));
+  animation: landing-rise 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .landing-hero h1 {
   max-width: 980px;
   margin: 0;
@@ -341,6 +349,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .landing-sky,
+  .landing-logo,
   .landing-hero h1,
   .landing-one-liner,
   .landing-actions {
@@ -459,6 +468,62 @@ a {
     color: var(--primary);
   }
 
+  /* Brand wordmark gradient: the blue→cyan sweep from the Nexeire logo. */
+  .text-gradient-brand {
+    background: linear-gradient(100deg, #4a52f2 0%, #3f9ae8 55%, #58c8f0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Route-loading state: brand mark inside a spinning gradient ring with a
+     breathing glow. The glow uses drop-shadow so it hugs the mark's alpha
+     silhouette rather than its bounding box. */
+  .app-loader {
+    display: grid;
+    place-items: center;
+    min-height: min(60vh, 30rem);
+  }
+
+  .app-loader-badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 8rem;
+    height: 8rem;
+  }
+
+  .app-loader-badge::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 52%,
+      #4a52f2 74%,
+      #58c8f0 94%,
+      transparent 100%
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 2.5px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 2.5px));
+    animation: app-loader-spin 1.1s linear infinite;
+  }
+
+  .app-loader-badge::after {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: -1;
+    border-radius: 9999px;
+    background: radial-gradient(closest-side, rgba(99, 102, 241, 0.3), transparent 72%);
+    animation: app-loader-breathe 2.2s ease-in-out infinite;
+  }
+
+  .app-loader-mark {
+    filter: drop-shadow(0 0 16px rgba(88, 200, 240, 0.45));
+  }
+
   /* Signature marketing-site move: italic Fraunces words in a periwinkle→violet
      gradient, dropped inside bold sans headlines. Pair with `font-display italic`. */
   .text-gradient-accent {
@@ -517,6 +582,25 @@ a {
   .app-stagger > *:nth-child(n+4) { animation-delay: 120ms; }
 }
 
+@keyframes app-loader-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes app-loader-breathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
 @keyframes app-rise {
   from {
     opacity: 0;
@@ -536,6 +620,11 @@ a {
 
   .app-rise-in,
   .app-stagger > * {
+    animation: none;
+  }
+
+  .app-loader-badge::before,
+  .app-loader-badge::after {
     animation: none;
   }
 }

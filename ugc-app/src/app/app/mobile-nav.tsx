@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Dialog } from "radix-ui";
 import { LogOut, Menu, X } from "lucide-react";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { buttonClasses, iconButtonClasses } from "@/components/ui/button";
 import { AppNav, type NavItem } from "./app-nav";
 
@@ -15,21 +16,17 @@ import { AppNav, type NavItem } from "./app-nav";
 export function MobileNav({
   items,
   orgName,
-  orgInitial,
 }: {
   items: NavItem[];
   orgName: string;
-  orgInitial: string;
 }) {
   const [open, setOpen] = React.useState(false);
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <div className="app-glass sticky top-0 z-30 flex items-center justify-between border-b border-border/70 px-5 py-4 lg:hidden">
-        <Link href="/app" className="flex min-w-0 items-center gap-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-semibold text-primary-foreground shadow-sm">
-            {orgInitial}
-          </span>
+        <Link href="/app" className="flex min-w-0 items-center gap-2.5">
+          <BrandMark size={26} className="shrink-0" />
           <span className="truncate text-base font-semibold tracking-tight text-foreground">
             {orgName}
           </span>
@@ -62,8 +59,11 @@ export function MobileNav({
           }
         >
           <div className="flex items-center justify-between px-2">
-            <Dialog.Title className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.32em] text-primary">
-              Nexeire
+            <Dialog.Title className="flex items-center gap-2.5">
+              <BrandMark size={26} />
+              <span className="text-gradient-brand text-lg font-bold tracking-tight">
+                nexeire
+              </span>
             </Dialog.Title>
             <Dialog.Close
               className={iconButtonClasses({ variant: "outline" })}

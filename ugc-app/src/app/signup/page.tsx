@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BrandMark } from "@/components/ui/brand-mark";
 import { buttonClasses } from "@/components/ui/button";
 import { inputClasses } from "@/components/ui/field";
 import { TitleAccent } from "@/components/ui/page-header";
@@ -146,11 +147,11 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
       <div className="app-rise-in w-full max-w-md">
         <div className="mb-8">
           <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.32em] text-primary"
-            >
-              Nexeire
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <BrandMark size={34} />
+              <span className="text-gradient-brand text-xl font-bold tracking-tight">
+                nexeire
+              </span>
             </Link>
             <span className="rounded-full bg-primary/10 px-2 py-0.5 font-mono text-[0.5rem] font-semibold uppercase tracking-[0.2em] text-primary ring-1 ring-primary/20">
               Beta
