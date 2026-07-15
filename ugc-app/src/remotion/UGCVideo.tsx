@@ -1,7 +1,7 @@
 import {
   AbsoluteFill,
   Audio,
-  Video,
+  OffthreadVideo,
   interpolate,
   useCurrentFrame,
 } from "remotion";
@@ -370,7 +370,7 @@ function SceneLayer({
   return (
     <AbsoluteFill style={{ background }}>
       {scene.signedUrl ? (
-        <Video
+        <OffthreadVideo
           src={scene.signedUrl}
           trimBefore={trimBefore}
           trimAfter={trimAfter}
