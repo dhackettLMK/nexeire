@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { LogOut } from "lucide-react";
+import { signedOrganizationLogoUrl } from "@/lib/assets/logo";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { buttonClasses } from "@/components/ui/button";
+import { WorkspaceAvatar } from "@/components/ui/workspace-avatar";
 import {
   getCurrentOrganizationForUser,
   requireUser,
@@ -28,10 +30,19 @@ export default async function AppLayout({
     : [{ href: "/app/setup", label: "Setup", icon: "setup" }];
   const orgName = organization?.name ?? "Setup";
   const orgInitial = orgName.charAt(0).toUpperCase();
+  const logoUrl = await signedOrganizationLogoUrl(
+    supabase,
+    organization?.logo_path ?? null,
+  );
 
   return (
     <div className="app-canvas min-h-dvh">
-      <MobileNav items={visibleNavItems} orgName={orgName} />
+      <MobileNav
+        items={visibleNavItems}
+        orgName={orgName}
+        orgInitial={orgInitial}
+        logoUrl={logoUrl}
+      />
       <aside className="app-glass fixed inset-y-0 left-0 z-20 hidden w-[17rem] flex-col border-r border-border/70 px-4 py-6 lg:flex">
         <Link href="/app" className="group block rounded-2xl px-2 py-1">
           <span className="flex items-center gap-2.5">
@@ -41,9 +52,7 @@ export default async function AppLayout({
             </span>
           </span>
           <div className="mt-4 flex items-center gap-3">
-            <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm">
-              {orgInitial}
-            </span>
+            <WorkspaceAvatar logoUrl={logoUrl} initial={orgInitial} size={36} />
             <p className="truncate text-lg font-semibold tracking-tight text-foreground">
               {orgName}
             </p>

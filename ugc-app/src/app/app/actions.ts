@@ -9,6 +9,7 @@ import {
   type AssetStatus,
 } from "@/lib/assets/constants";
 import {
+  customerAssetBucket,
   validateOrganizationAssetUpload,
   type OrganizationAssetUploadPayload,
 } from "@/lib/assets/validation";
@@ -275,6 +276,44 @@ export async function saveBrandProfileAction(formData: FormData) {
   revalidatePath("/app");
   revalidatePath("/app/brand");
   redirect("/app/brand?saved=1");
+}
+
+/** Persists (or clears, when `storagePath` is null) the workspace's uploaded
+ *  brand logo, shown in the app shell in place of the initial avatar. */
+export async function saveOrganizationLogoAction(payload: {
+  organizationId: string;
+  storagePath: string | null;
+}) {
+  const { supabase, organization } = await requireOrganization("/app/brand");
+
+  if (payload.organizationId !== organization.id) {
+    throw new Error("Logo does not belong to this workspace");
+  }
+
+  if (
+    payload.storagePath &&
+    !payload.storagePath.startsWith(`organizations/${organization.id}/brand-logo/`)
+  ) {
+    throw new Error("Invalid logo storage path");
+  }
+
+  const previousLogoPath = organization.logo_path;
+
+  const { error } = await supabase
+    .from("organizations")
+    .update({ logo_path: payload.storagePath })
+    .eq("id", organization.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (previousLogoPath && previousLogoPath !== payload.storagePath) {
+    await supabase.storage.from(customerAssetBucket).remove([previousLogoPath]);
+  }
+
+  revalidatePath("/app/brand");
+  revalidatePath("/app", "layout");
 }
 
 export async function recordOrganizationAssetUploadAction(

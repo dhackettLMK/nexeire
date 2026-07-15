@@ -11,6 +11,7 @@ export type Organization = {
   slug: string;
   status: string;
   owner_user_id: string;
+  logo_path: string | null;
 };
 
 export type OrganizationMembership = {
@@ -93,7 +94,7 @@ export async function getCurrentOrganizationForUser(
   const typedMembership = membership as OrganizationMembership;
   const { data: organization, error: organizationError } = await supabase
     .from("organizations")
-    .select("id,name,slug,status,owner_user_id")
+    .select("id,name,slug,status,owner_user_id,logo_path")
     .eq("id", typedMembership.organization_id)
     .single();
 

@@ -6,6 +6,7 @@ import { Dialog } from "radix-ui";
 import { LogOut, Menu, X } from "lucide-react";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { buttonClasses, iconButtonClasses } from "@/components/ui/button";
+import { WorkspaceAvatar } from "@/components/ui/workspace-avatar";
 import { AppNav, type NavItem } from "./app-nav";
 
 /**
@@ -16,9 +17,13 @@ import { AppNav, type NavItem } from "./app-nav";
 export function MobileNav({
   items,
   orgName,
+  orgInitial,
+  logoUrl,
 }: {
   items: NavItem[];
   orgName: string;
+  orgInitial: string;
+  logoUrl: string | null;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -26,7 +31,7 @@ export function MobileNav({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <div className="app-glass sticky top-0 z-30 flex items-center justify-between border-b border-border/70 px-5 py-4 lg:hidden">
         <Link href="/app" className="flex min-w-0 items-center gap-2.5">
-          <BrandMark size={26} className="shrink-0" />
+          <WorkspaceAvatar logoUrl={logoUrl} initial={orgInitial} size={30} />
           <span className="truncate text-base font-semibold tracking-tight text-foreground">
             {orgName}
           </span>

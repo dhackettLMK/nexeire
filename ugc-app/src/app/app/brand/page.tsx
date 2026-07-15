@@ -1,5 +1,6 @@
 import { Save } from "lucide-react";
 import { saveBrandProfileAction } from "@/app/app/actions";
+import { LogoUploadField } from "@/app/app/brand/logo-upload-field";
 import { brandIntakeQuestions } from "@/lib/brand-intake/questions";
 import {
   brandProfileSummaryItems,
@@ -7,6 +8,7 @@ import {
   getBrandProfileCompletion,
   type BrandProfile,
 } from "@/lib/brand-intake/profile";
+import { signedOrganizationLogoUrl } from "@/lib/assets/logo";
 import { requireOrganization } from "@/lib/customer/organization";
 import { PageHeader, TitleAccent } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
@@ -96,6 +98,11 @@ export default async function BrandPage() {
   const { supabase, organization } = await requireOrganization("/app/brand");
   const { profile, messages } = await getBrandData(supabase, organization.id);
   const completion = getBrandProfileCompletion(profile);
+  const orgInitial = organization.name.charAt(0).toUpperCase();
+  const logoUrl = await signedOrganizationLogoUrl(
+    supabase,
+    organization.logo_path,
+  );
 
   return (
     <div className="app-stagger grid gap-8">
@@ -110,6 +117,20 @@ export default async function BrandPage() {
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
         <section className="grid gap-5">
+          <Card className="grid gap-4 p-5">
+            <div>
+              <h2 className="font-medium text-foreground">Brand logo</h2>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Upload your logo and it replaces the workspace initial in the
+                sidebar and topbar.
+              </p>
+            </div>
+            <LogoUploadField
+              organizationId={organization.id}
+              orgInitial={orgInitial}
+              logoUrl={logoUrl}
+            />
+          </Card>
           <form action={saveBrandProfileAction} className="grid gap-4">
             {brandIntakeQuestions.map((question, index) => (
               <Card key={question.name} className="grid gap-4 p-5">

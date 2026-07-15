@@ -62,6 +62,26 @@ export function organizationThumbnailStoragePath(
   return `organizations/${organizationId}/thumbnails/${assetId}.webp`;
 }
 
+// Matches the client-assets bucket's allowed_mime_types (see
+// supabase/migrations/20260614000000_phase_1_minimal_data_model.sql).
+export const organizationLogoMimeTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+] as const;
+
+export const organizationLogoMaxBytes = 4 * 1024 * 1024;
+
+export function organizationLogoStoragePath(
+  organizationId: string,
+  logoId: string,
+  filename: string,
+) {
+  return `organizations/${organizationId}/brand-logo/${logoId}-${safeFilename(
+    filename,
+  )}`;
+}
+
 export function organizationGeneratedVideoPath(
   organizationId: string,
   videoOutputId: string,
