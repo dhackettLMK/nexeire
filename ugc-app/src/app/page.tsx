@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { GlobeCanvas } from "./globe-canvas";
 
 const checklist = [
   "Script generated",
@@ -30,7 +31,7 @@ export default function Home() {
         <div className="landing-visual" aria-hidden="true">
           <div className="landing-glow" />
           <div className="landing-globe">
-            <div className="landing-globe-sprite" />
+            <GlobeCanvas />
           </div>
           <div className="landing-phone">
             <div className="landing-phone-notch" />
