@@ -7,7 +7,7 @@ import { canRetryVideo, type VideoStatus } from "@/lib/batches/rules";
 import { staleRenderMessage } from "@/lib/providers/stale-jobs";
 import { requireOrganization } from "@/lib/customer/organization";
 import { videoDownloadUrl } from "@/lib/videos/downloads";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageHeader, TitleAccent } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge, type BadgeVariant } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -80,8 +80,8 @@ function statusHint(status: string) {
 
 function progressTone(status: string) {
   if (status === "failed") return "var(--destructive)";
-  if (status === "ready") return "oklch(0.627 0.194 149.214)";
-  if (status === "needs_review") return "oklch(0.666 0.179 58.318)";
+  if (status === "ready") return "oklch(0.72 0.17 155)";
+  if (status === "needs_review") return "oklch(0.76 0.15 70)";
   return "var(--primary)";
 }
 
@@ -185,7 +185,11 @@ export default async function InboxPage() {
       <RenderPollingBridge active={hasRenderingVideos} />
       <PageHeader
         eyebrow="Library"
-        title="Your videos"
+        title={
+          <>
+            Your <TitleAccent>videos</TitleAccent>
+          </>
+        }
         description="Finished videos land here, ready to download. Failed renders can be retried."
       />
       {signedOutputs.length > 0 ? (
@@ -248,7 +252,7 @@ export default async function InboxPage() {
                     <div className="flex items-start justify-end gap-3">
                       <StatusProgressRing status={output.status} />
                       <div className="grid gap-2 md:justify-items-end">
-                        <Badge variant={statusVariant(output.status)}>
+                        <Badge variant={statusVariant(output.status)} dot>
                           {formatStatus(output.status)}
                         </Badge>
                         <p className="text-xs text-muted-foreground">
@@ -286,7 +290,11 @@ export default async function InboxPage() {
       ) : (
         <EmptyState
           icon={<Inbox className="size-6" aria-hidden="true" />}
-          title="No videos yet"
+          title={
+            <>
+              No videos <TitleAccent>yet</TitleAccent>
+            </>
+          }
           description="Upload some clips and hit generate — your finished videos will show up here."
         />
       )}

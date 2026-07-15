@@ -17,6 +17,7 @@ import { Card, CardLink } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Stat } from "@/components/ui/stat";
 import { AnimatedNumber } from "@/components/ui/animated-number";
+import { TitleAccent } from "@/components/ui/page-header";
 import { Field, inputClasses } from "@/components/ui/field";
 import { SubmitButton } from "@/components/ui/loading-button";
 import { buttonClasses, ButtonIcon } from "@/components/ui/button";
@@ -64,12 +65,13 @@ export default async function AppHomePage() {
     <div className="app-stagger grid gap-10">
       <section className="max-w-2xl">
         <Eyebrow>Workspace</Eyebrow>
-        <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight text-balance sm:text-5xl">
+        <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-balance text-foreground sm:text-5xl">
           {organization.name}
         </h1>
         <p className="mt-4 text-base leading-7 text-muted-foreground text-pretty">
-          Upload clips and photos of your business, hit generate, and we&apos;ll
-          write, edit, and render finished marketing videos for you to download.
+          Upload clips and photos of your business, hit generate, and your
+          finished marketing videos are written, edited, and rendered{" "}
+          <TitleAccent>overnight.</TitleAccent>
         </p>
       </section>
 
@@ -101,8 +103,8 @@ export default async function AppHomePage() {
       <section>
         <Card className="grid gap-5">
           <div>
-            <h2 className="font-display text-2xl font-medium tracking-tight">
-              Generate videos
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              Generate <TitleAccent>videos</TitleAccent>
             </h2>
             <p className="mt-1 text-sm leading-6 text-muted-foreground">
               We use your brand profile and uploaded clips to write scripts and
@@ -142,7 +144,7 @@ export default async function AppHomePage() {
               </SubmitButton>
             </form>
           ) : (
-            <div className="grid gap-3 rounded-xl bg-muted/50 p-4 ring-1 ring-foreground/[0.05]">
+            <div className="grid gap-3 rounded-xl bg-muted/60 p-4 ring-1 ring-primary/15">
               <p className="text-sm text-muted-foreground">
                 Two quick things before your first generate:
               </p>
@@ -152,7 +154,7 @@ export default async function AppHomePage() {
                     className={cn(
                       "inline-flex size-5 items-center justify-center rounded-full font-mono text-[0.625rem]",
                       brandReady
-                        ? "bg-emerald-50 text-emerald-600"
+                        ? "bg-emerald-400/15 text-emerald-300"
                         : "bg-primary text-primary-foreground",
                     )}
                   >
@@ -167,7 +169,7 @@ export default async function AppHomePage() {
                     className={cn(
                       "inline-flex size-5 items-center justify-center rounded-full font-mono text-[0.625rem]",
                       hasUploads
-                        ? "bg-emerald-50 text-emerald-600"
+                        ? "bg-emerald-400/15 text-emerald-300"
                         : "bg-primary text-primary-foreground",
                     )}
                   >

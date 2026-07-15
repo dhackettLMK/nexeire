@@ -16,10 +16,15 @@ export const buttonClasses = cva(
   {
     variants: {
       variant: {
-        primary:
-          "bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:brightness-105",
+        primary: cn(
+          "bg-linear-to-br from-[#6366f1] to-[#8b94fa] text-white",
+          "shadow-[0_0_28px_rgba(99,102,241,0.35),0_2px_8px_rgba(5,5,16,0.5)]",
+          "hover:brightness-110 hover:-translate-y-px",
+          "hover:shadow-[0_0_44px_rgba(99,102,241,0.5),0_4px_12px_rgba(5,5,16,0.5)]",
+          "motion-reduce:hover:translate-y-0",
+        ),
         secondary:
-          "bg-card text-foreground ring-1 ring-foreground/10 shadow-sm hover:ring-foreground/20 hover:shadow-md",
+          "bg-card text-foreground ring-1 ring-primary/20 shadow-sm hover:ring-primary/40 hover:shadow-[0_0_24px_rgba(99,102,241,0.18)]",
         ghost: "text-foreground hover:bg-accent",
         outline:
           "ring-1 ring-input text-foreground hover:bg-accent hover:text-accent-foreground",
@@ -53,7 +58,7 @@ export const iconButtonClasses = cva(
       variant: {
         ghost: "hover:bg-accent hover:text-foreground",
         outline:
-          "ring-1 ring-foreground/10 hover:bg-accent hover:text-foreground hover:ring-foreground/20",
+          "ring-1 ring-primary/20 hover:bg-accent hover:text-foreground hover:ring-primary/40",
       },
       size: {
         sm: "size-10",

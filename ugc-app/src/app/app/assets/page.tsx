@@ -12,7 +12,7 @@ import {
 import { signedUrlTtlSeconds } from "@/lib/assets/validation";
 import { requireOrganization } from "@/lib/customer/organization";
 import { AssetUploadPanel } from "./asset-upload-panel";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageHeader, TitleAccent } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -24,7 +24,7 @@ import { AnimatedNumber } from "@/components/ui/animated-number";
 import { cn } from "@/lib/utils";
 
 const dtClass =
-  "font-mono text-[0.625rem] uppercase tracking-[0.14em] text-muted-foreground";
+  "font-mono text-[0.625rem] uppercase tracking-[0.14em] text-primary/75";
 
 type AssetRecord = {
   id: string;
@@ -145,7 +145,7 @@ function AssetCard({ asset, index }: { asset: SignedAsset; index: number }) {
       className="app-rise-in grid overflow-hidden p-0"
       style={{ animationDelay: `${Math.min(index, 7) * 70}ms` }}
     >
-      <div className="aspect-video bg-muted ring-1 ring-inset ring-foreground/[0.06]">
+      <div className="aspect-video bg-muted ring-1 ring-inset ring-primary/10">
         {asset.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -244,7 +244,7 @@ function AssetCard({ asset, index }: { asset: SignedAsset; index: number }) {
               {assetTags.map((tag) => (
                 <label
                   key={tag}
-                  className="inline-flex h-8 items-center gap-2 rounded-full bg-muted px-2.5 text-xs font-medium ring-1 ring-foreground/[0.06] transition-colors has-[:checked]:bg-primary/10 has-[:checked]:text-primary has-[:checked]:ring-primary/20"
+                  className="inline-flex h-8 items-center gap-2 rounded-full bg-muted px-2.5 text-xs font-medium ring-1 ring-border transition-colors has-[:checked]:bg-primary/10 has-[:checked]:text-primary has-[:checked]:ring-primary/30"
                 >
                   <input
                     name="tags"
@@ -287,7 +287,7 @@ function AssetCard({ asset, index }: { asset: SignedAsset; index: number }) {
               icon={<Trash2 className="size-4" />}
               variant="secondary"
               size="sm"
-              className="w-fit text-destructive ring-destructive/20 hover:bg-red-50 hover:ring-destructive/30"
+              className="w-fit text-destructive ring-destructive/25 hover:bg-red-400/10 hover:ring-destructive/40"
             >
               Delete
             </SubmitButton>
@@ -358,7 +358,11 @@ export default async function AssetsPage() {
     <div className="app-stagger grid gap-8">
       <PageHeader
         eyebrow="Step 02"
-        title="B-roll library"
+        title={
+          <>
+            B-roll <TitleAccent>library</TitleAccent>
+          </>
+        }
         description="Upload phone-shot clips, confirm usage rights, tag usable moments, and select the footage that should feed script and render generation."
       />
 
@@ -369,7 +373,7 @@ export default async function AssetsPage() {
 
       <Card className="grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
         <div>
-          <h2 className="font-display text-xl font-medium tracking-tight">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
             Library
           </h2>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
@@ -377,21 +381,21 @@ export default async function AssetsPage() {
           </p>
         </div>
         <dl className="grid grid-cols-3 gap-3 text-sm">
-          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
+          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-primary/15">
             <dt className={dtClass}>Total</dt>
-            <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
+            <dd className="mt-1.5 text-lg font-bold tabular-nums text-foreground">
               <AnimatedNumber value={assets.length} />
             </dd>
           </div>
-          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
+          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-primary/15">
             <dt className={dtClass}>Selected</dt>
-            <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
+            <dd className="mt-1.5 text-lg font-bold tabular-nums text-foreground">
               <AnimatedNumber value={selectedCount} />
             </dd>
           </div>
-          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
+          <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-primary/15">
             <dt className={dtClass}>Tagged</dt>
-            <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
+            <dd className="mt-1.5 text-lg font-bold tabular-nums text-foreground">
               <AnimatedNumber
                 value={assets.filter((asset) => (asset.tags ?? []).length > 0).length}
               />
@@ -409,7 +413,11 @@ export default async function AssetsPage() {
       ) : (
         <EmptyState
           icon={<UploadCloud className="size-6" aria-hidden="true" />}
-          title="No clips uploaded"
+          title={
+            <>
+              No clips <TitleAccent>yet</TitleAccent>
+            </>
+          }
           description="Upload 20-50 realistic phone clips for best batch generation coverage."
         />
       )}

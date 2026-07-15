@@ -5,7 +5,7 @@ import {
   getCurrentOrganizationForUser,
   requireUser,
 } from "@/lib/customer/organization";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageHeader, TitleAccent } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { Field, inputClasses } from "@/components/ui/field";
 import { SubmitButton } from "@/components/ui/loading-button";
@@ -29,7 +29,11 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
     <div className="app-stagger mx-auto grid max-w-3xl gap-8">
       <PageHeader
         eyebrow="Setup"
-        title="Set up your workspace"
+        title={
+          <>
+            Set up your <TitleAccent>workspace</TitleAccent>
+          </>
+        }
         description="This creates the organization record used for your brand profile, uploaded assets, and future generated videos."
       />
       <Card asChild>

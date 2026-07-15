@@ -45,7 +45,7 @@ export function AppNav({ items }: { items: NavItem[] }) {
       <span
         aria-hidden="true"
         className={cn(
-          "absolute inset-x-0 top-0 h-11 rounded-xl bg-card shadow-sm ring-1 ring-foreground/[0.06]",
+          "absolute inset-x-0 top-0 h-11 rounded-xl bg-primary/12 ring-1 ring-primary/25",
           "transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
           "motion-reduce:transition-none",
           activeIndex === -1 && "opacity-0",
@@ -67,7 +67,7 @@ export function AppNav({ items }: { items: NavItem[] }) {
               "group relative z-10 inline-flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium",
               "transition-colors duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]",
               active
-                ? "text-foreground"
+                ? "text-primary"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
@@ -76,7 +76,7 @@ export function AppNav({ items }: { items: NavItem[] }) {
                 "size-[1.05rem] shrink-0 transition-colors duration-200",
                 active
                   ? "text-primary"
-                  : "text-muted-foreground group-hover:text-foreground",
+                  : "text-muted-foreground/80 group-hover:text-foreground",
               )}
               aria-hidden="true"
             />

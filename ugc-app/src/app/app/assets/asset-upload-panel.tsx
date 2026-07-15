@@ -284,7 +284,7 @@ export function AssetUploadPanel({
   return (
     <Card className="grid gap-5">
       <div>
-        <h2 className="font-display text-xl font-medium tracking-tight">
+        <h2 className="text-xl font-semibold tracking-tight text-foreground">
           Upload b-roll
         </h2>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
@@ -315,7 +315,7 @@ export function AssetUploadPanel({
             />
           </label>
 
-          <label className="flex items-start gap-3 rounded-xl bg-muted/50 p-3 text-sm font-medium text-foreground ring-1 ring-foreground/[0.05]">
+          <label className="flex items-start gap-3 rounded-xl bg-muted/60 p-3 text-sm font-medium text-foreground ring-1 ring-primary/15">
             <input
               type="checkbox"
               checked={rightsConfirmed}
@@ -332,7 +332,7 @@ export function AssetUploadPanel({
               {assetTags.map((tag) => (
                 <label
                   key={tag}
-                  className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full bg-muted px-3 text-sm font-medium text-foreground ring-1 ring-foreground/[0.06] transition-colors has-[:checked]:bg-primary/10 has-[:checked]:text-primary has-[:checked]:ring-primary/20"
+                  className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full bg-muted px-3 text-sm font-medium text-foreground ring-1 ring-border transition-colors has-[:checked]:bg-primary/10 has-[:checked]:text-primary has-[:checked]:ring-primary/30"
                 >
                   <input
                     type="checkbox"
@@ -360,7 +360,7 @@ export function AssetUploadPanel({
           </label>
         </div>
 
-        <div className="grid content-start gap-4 rounded-2xl bg-muted/40 p-4 ring-1 ring-foreground/[0.05]">
+        <div className="grid content-start gap-4 rounded-2xl bg-muted/60 p-4 ring-1 ring-primary/15">
           {file ? (
             <dl className="grid gap-2 text-sm text-muted-foreground">
               <div className="flex justify-between gap-3">
@@ -396,7 +396,7 @@ export function AssetUploadPanel({
 
           {message ? <p className="text-sm font-medium text-foreground">{message}</p> : null}
           {thumbnailWarning ? (
-            <p className="text-sm leading-6 text-amber-700">
+            <p className="text-sm leading-6 text-amber-300">
               {thumbnailWarning}
             </p>
           ) : null}

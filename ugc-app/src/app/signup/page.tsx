@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { buttonClasses } from "@/components/ui/button";
 import { inputClasses } from "@/components/ui/field";
+import { TitleAccent } from "@/components/ui/page-header";
 import { isSupabaseConfigured } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
@@ -138,8 +139,8 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
   return (
     <main className="app-canvas relative flex min-h-dvh items-center justify-center overflow-hidden px-6 py-12">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-24 top-1/4 h-72 w-72 animate-pulse rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute -right-24 bottom-1/4 h-80 w-80 animate-pulse rounded-full bg-blue-400/10 blur-3xl [animation-delay:1.2s]" />
+        <div className="absolute -left-24 top-1/4 h-72 w-72 animate-pulse rounded-full bg-primary/15 blur-3xl" />
+        <div className="absolute -right-24 bottom-1/4 h-80 w-80 animate-pulse rounded-full bg-[#7c6ff0]/15 blur-3xl [animation-delay:1.2s]" />
       </div>
 
       <div className="app-rise-in w-full max-w-md">
@@ -158,8 +159,8 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
           {mode === "code" ? (
             <>
-              <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight">
-                Enter your access code
+              <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-foreground">
+                Enter your <TitleAccent>access code.</TitleAccent>
               </h1>
               <p className="mt-3 text-sm leading-6 text-muted-foreground text-pretty">
                 Approved? Enter the access code you were given to finish setting up your
@@ -168,8 +169,8 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
             </>
           ) : (
             <>
-              <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight">
-                Request early access
+              <h1 className="mt-4 text-4xl font-bold leading-[1.05] tracking-tight text-foreground">
+                Request <TitleAccent>early access.</TitleAccent>
               </h1>
               <p className="mt-3 text-sm leading-6 text-muted-foreground text-pretty">
                 Nexeire is in private beta. Drop your email and we&apos;ll be in touch with
@@ -180,9 +181,9 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         </div>
 
         {params.requested ? (
-          <div className="animate-in fade-in zoom-in-95 rounded-2xl bg-emerald-50 px-5 py-6 text-center ring-1 ring-emerald-600/20 duration-500">
-            <p className="font-display text-lg text-emerald-900">Request received</p>
-            <p className="mt-2 text-sm text-emerald-800">
+          <div className="animate-in fade-in zoom-in-95 rounded-2xl bg-emerald-400/10 px-5 py-6 text-center ring-1 ring-emerald-400/25 duration-500">
+            <p className="text-lg font-semibold text-emerald-200">Request received</p>
+            <p className="mt-2 text-sm text-emerald-300">
               We&apos;ll email you an access code if you&apos;re approved.
             </p>
             <Link
@@ -193,7 +194,10 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
             </Link>
           </div>
         ) : mode === "code" ? (
-          <form action={signup} className="grid gap-5">
+          <form
+            action={signup}
+            className="grid gap-5 rounded-2xl bg-card p-6 ring-1 ring-primary/15 shadow-[0_2px_8px_rgba(5,5,16,0.4),inset_0_1px_0_0_rgba(165,180,252,0.07)]"
+          >
             <div className="grid gap-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -235,7 +239,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
               />
             </div>
             {params.error ? (
-              <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-sm text-red-700 ring-1 ring-red-600/20">
+              <p className="rounded-xl bg-red-400/10 px-3.5 py-2.5 text-sm text-red-300 ring-1 ring-red-400/25">
                 {params.error}
               </p>
             ) : null}
@@ -250,7 +254,10 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
             </Link>
           </form>
         ) : (
-          <form action={requestAccess} className="grid gap-5">
+          <form
+            action={requestAccess}
+            className="grid gap-5 rounded-2xl bg-card p-6 ring-1 ring-primary/15 shadow-[0_2px_8px_rgba(5,5,16,0.4),inset_0_1px_0_0_rgba(165,180,252,0.07)]"
+          >
             <div className="grid gap-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email
@@ -278,7 +285,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
               />
             </div>
             {params.error ? (
-              <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-sm text-red-700 ring-1 ring-red-600/20">
+              <p className="rounded-xl bg-red-400/10 px-3.5 py-2.5 text-sm text-red-300 ring-1 ring-red-400/25">
                 {params.error}
               </p>
             ) : null}

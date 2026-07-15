@@ -31,7 +31,7 @@ export function EmptyState({
           {icon}
         </span>
       ) : null}
-      <h3 className="font-display text-lg font-medium tracking-tight">{title}</h3>
+      <h3 className="text-lg font-semibold tracking-tight text-foreground">{title}</h3>
       {description ? (
         <p className="max-w-sm text-sm leading-6 text-muted-foreground">
           {description}

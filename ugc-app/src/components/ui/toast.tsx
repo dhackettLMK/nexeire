@@ -35,7 +35,7 @@ function createToastId() {
 
 function ToastIcon({ variant }: { variant: ToastVariant }) {
   if (variant === "success") {
-    return <CheckCircle2 className="size-4 text-emerald-600" aria-hidden="true" />;
+    return <CheckCircle2 className="size-4 text-emerald-300" aria-hidden="true" />;
   }
 
   if (variant === "error") {
@@ -79,7 +79,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             }
           }}
           className={cn(
-            "grid w-[min(420px,calc(100vw_-_32px))] grid-cols-[auto_1fr_auto] items-start gap-3 rounded-2xl bg-card p-4 text-sm text-card-foreground shadow-lg ring-1 ring-foreground/10",
+            "grid w-[min(420px,calc(100vw_-_32px))] grid-cols-[auto_1fr_auto] items-start gap-3 rounded-2xl bg-popover p-4 text-sm text-popover-foreground shadow-lg ring-1 ring-primary/25",
             "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:slide-in-from-top-2",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-right-4",
             "data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform data-[swipe=end]:animate-out data-[swipe=end]:slide-out-to-right-full",

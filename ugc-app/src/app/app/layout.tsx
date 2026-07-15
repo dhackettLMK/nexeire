@@ -44,7 +44,7 @@ export default async function AppLayout({
             <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-sm">
               {orgInitial}
             </span>
-            <p className="truncate font-display text-lg font-medium tracking-tight">
+            <p className="truncate text-lg font-semibold tracking-tight text-foreground">
               {orgName}
             </p>
           </div>

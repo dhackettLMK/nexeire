@@ -81,14 +81,14 @@ export function LoginForm({
           />
         </Field>
         {setupRequired ? (
-          <p className="rounded-xl bg-amber-50 px-3.5 py-2.5 text-sm text-amber-900 ring-1 ring-amber-600/20">
+          <p className="rounded-xl bg-amber-400/10 px-3.5 py-2.5 text-sm text-amber-200 ring-1 ring-amber-400/25">
             Supabase env vars are not configured yet. Copy `.env.example` to
             `.env.local` and add your project URL, publishable key, and admin
             email.
           </p>
         ) : null}
         {error ? (
-          <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-sm text-red-700 ring-1 ring-red-600/20">
+          <p className="rounded-xl bg-red-400/10 px-3.5 py-2.5 text-sm text-red-300 ring-1 ring-red-400/25">
             {error}
           </p>
         ) : null}

@@ -157,7 +157,7 @@ function JsonBlock({ title, value }: { title: string; value: unknown }) {
 function Field({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+      <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-primary/75">
         {label}
       </p>
       <div className="mt-1 text-sm text-foreground">{value}</div>
@@ -235,12 +235,12 @@ export default async function VideoTracePage({ params }: TracePageProps) {
       <Card className="grid gap-5">
         <div className="flex items-center gap-3">
           <GitBranch className="size-5 text-primary" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-medium">Output state</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Output state</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-4">
           <Field
             label="Status"
-            value={<Badge variant={statusVariant(typedOutput.status)}>{typedOutput.status}</Badge>}
+            value={<Badge variant={statusVariant(typedOutput.status)} dot>{typedOutput.status}</Badge>}
           />
           <Field label="Provider" value={typedOutput.provider ?? "—"} />
           <Field label="Provider render id" value={typedOutput.provider_render_id ?? "—"} />
@@ -260,7 +260,7 @@ export default async function VideoTracePage({ params }: TracePageProps) {
       <Card className="grid gap-5">
         <div className="flex items-center gap-3">
           <Bot className="size-5 text-primary" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-medium">LLM/script output</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">LLM/script output</h2>
         </div>
         {campaignScript ? (
           <div className="grid gap-4">
@@ -286,7 +286,7 @@ export default async function VideoTracePage({ params }: TracePageProps) {
       <Card className="grid gap-5">
         <div className="flex items-center gap-3">
           <ShieldAlert className="size-5 text-primary" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-medium">Provider calls</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Provider calls</h2>
         </div>
         {providerJobs.length > 0 ? (
           <div className="grid gap-4">
@@ -335,7 +335,7 @@ export default async function VideoTracePage({ params }: TracePageProps) {
       <Card className="grid gap-5">
         <div className="flex items-center gap-3">
           <Coins className="size-5 text-primary" aria-hidden="true" />
-          <h2 className="font-display text-2xl font-medium">Cost events</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Cost events</h2>
         </div>
         {providerCosts.length > 0 ? (
           <div className="grid gap-3">

@@ -30,7 +30,7 @@ export function MobileNav({
           <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-xs font-semibold text-primary-foreground shadow-sm">
             {orgInitial}
           </span>
-          <span className="truncate font-display text-base font-medium tracking-tight">
+          <span className="truncate text-base font-semibold tracking-tight text-foreground">
             {orgName}
           </span>
         </Link>
@@ -49,7 +49,7 @@ export function MobileNav({
       <Dialog.Portal>
         <Dialog.Overlay
           className={
-            "fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm lg:hidden " +
+            "fixed inset-0 z-40 bg-[#050510]/60 backdrop-blur-sm lg:hidden " +
             "data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:duration-200 " +
             "data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:duration-150"
           }

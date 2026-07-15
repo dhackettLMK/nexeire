@@ -8,7 +8,7 @@ import {
   type BrandProfile,
 } from "@/lib/brand-intake/profile";
 import { requireOrganization } from "@/lib/customer/organization";
-import { PageHeader } from "@/components/ui/page-header";
+import { PageHeader, TitleAccent } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { inputClasses } from "@/components/ui/field";
 import { SubmitButton } from "@/components/ui/loading-button";
@@ -101,7 +101,11 @@ export default async function BrandPage() {
     <div className="app-stagger grid gap-8">
       <PageHeader
         eyebrow="Step 01"
-        title="Brand intake"
+        title={
+          <>
+            Brand <TitleAccent>intake</TitleAccent>
+          </>
+        }
         description="Answer these prompts once. The saved profile becomes the reusable source for scripts, asset requests, and future video generation."
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
@@ -137,10 +141,10 @@ export default async function BrandPage() {
         </section>
         <aside className="app-stagger grid h-fit gap-4 xl:sticky xl:top-12">
           <Card className="p-5">
-            <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted-foreground">
+            <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-primary/80">
               Profile readiness
             </p>
-            <p className="mt-4 font-display text-4xl font-medium tabular-nums">
+            <p className="mt-4 text-4xl font-bold tabular-nums text-foreground">
               <AnimatedNumber value={completion.percent} suffix="%" />
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -148,17 +152,17 @@ export default async function BrandPage() {
               required answers complete.
             </p>
             {completion.missingRequired.length > 0 ? (
-              <div className="mt-4 rounded-xl bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-amber-600/20">
+              <div className="mt-4 rounded-xl bg-amber-400/10 px-3 py-2 text-sm text-amber-200 ring-1 ring-amber-400/25">
                 Missing: {completion.missingRequired.join(", ")}
               </div>
             ) : (
-              <div className="mt-4 rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-900 ring-1 ring-emerald-600/20">
+              <div className="mt-4 rounded-xl bg-emerald-400/10 px-3 py-2 text-sm text-emerald-200 ring-1 ring-emerald-400/25">
                 This profile is ready for script generation.
               </div>
             )}
           </Card>
           <Card className="p-5">
-            <h2 className="font-display text-lg font-medium tracking-tight">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               Structured profile
             </h2>
             <dl className="mt-4 grid gap-3 text-sm">
@@ -175,7 +179,7 @@ export default async function BrandPage() {
             </dl>
           </Card>
           <Card className="p-5">
-            <h2 className="font-display text-lg font-medium tracking-tight">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               Saved transcript
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">

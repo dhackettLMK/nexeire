@@ -59,7 +59,7 @@ export function RenderPollingBridge({ active }: { active: boolean }) {
 
   return (
     <p
-      className="app-rise-in rounded-xl bg-amber-50 px-3.5 py-2.5 text-sm text-amber-900 ring-1 ring-amber-600/20"
+      className="app-rise-in rounded-xl bg-amber-400/10 px-3.5 py-2.5 text-sm text-amber-200 ring-1 ring-amber-400/25"
       role="status"
     >
       Still waiting on a render — this is taking longer than usual. It will

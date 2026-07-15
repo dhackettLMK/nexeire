@@ -2,7 +2,22 @@ import { cn } from "@/lib/utils";
 import { Eyebrow } from "./eyebrow";
 
 /**
- * Standard page masthead: eyebrow tag, Fraunces display title, supporting copy,
+ * The marketing site's signature typographic move: an italic Fraunces word in
+ * a periwinkle→violet gradient dropped inside a bold sans headline
+ * ("Your content, *done overnight.*"). Wrap the accent word(s) with this
+ * inside PageHeader titles, empty-state titles, or card headings.
+ */
+export function TitleAccent({ children }: { children: React.ReactNode }) {
+  return (
+    <em className="text-gradient-accent font-display pr-0.5 font-medium italic">
+      {children}
+    </em>
+  );
+}
+
+/**
+ * Standard page masthead: periwinkle eyebrow tag, bold sans display title
+ * (drop TitleAccent words in for the serif-gradient mix), supporting copy,
  * and an optional right-aligned actions slot. Used at the top of every page.
  */
 export function PageHeader({
@@ -29,7 +44,7 @@ export function PageHeader({
         {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
         <h1
           className={cn(
-            "font-display text-3xl font-medium leading-[1.1] tracking-tight text-balance sm:text-4xl",
+            "text-3xl font-bold leading-[1.1] tracking-tight text-balance text-foreground sm:text-4xl",
             eyebrow && "mt-4",
           )}
         >
@@ -73,7 +88,7 @@ export function SectionHeader({
         {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
         <h2
           className={cn(
-            "font-display text-xl font-medium tracking-tight sm:text-2xl",
+            "text-xl font-semibold tracking-tight text-foreground sm:text-2xl",
             eyebrow && "mt-3",
           )}
         >
