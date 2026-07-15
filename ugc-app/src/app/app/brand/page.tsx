@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { inputClasses } from "@/components/ui/field";
 import { SubmitButton } from "@/components/ui/loading-button";
+import { AnimatedNumber } from "@/components/ui/animated-number";
 
 type IntakeMessage = {
   id: string;
@@ -97,15 +98,15 @@ export default async function BrandPage() {
   const completion = getBrandProfileCompletion(profile);
 
   return (
-    <div className="grid gap-8">
+    <div className="app-stagger grid gap-8">
       <PageHeader
         eyebrow="Step 01"
         title="Brand intake"
         description="Answer these prompts once. The saved profile becomes the reusable source for scripts, asset requests, and future video generation."
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="grid gap-5">
-          <form action={saveBrandProfileAction} className="grid gap-4">
+        <section className="app-stagger grid gap-5">
+          <form action={saveBrandProfileAction} className="app-stagger grid gap-4">
             {brandIntakeQuestions.map((question, index) => (
               <Card key={question.name} className="grid gap-4 p-5">
                 <div className="flex items-start gap-3">
@@ -134,13 +135,13 @@ export default async function BrandPage() {
             </SubmitButton>
           </form>
         </section>
-        <aside className="grid h-fit gap-4 xl:sticky xl:top-12">
+        <aside className="app-stagger grid h-fit gap-4 xl:sticky xl:top-12">
           <Card className="p-5">
             <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted-foreground">
               Profile readiness
             </p>
             <p className="mt-4 font-display text-4xl font-medium tabular-nums">
-              {completion.percent}%
+              <AnimatedNumber value={completion.percent} suffix="%" />
             </p>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               {completion.completedRequired} of {completion.totalRequired}{" "}

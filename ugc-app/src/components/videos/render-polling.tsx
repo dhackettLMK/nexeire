@@ -58,7 +58,10 @@ export function RenderPollingBridge({ active }: { active: boolean }) {
   }
 
   return (
-    <p className="text-sm text-muted-foreground" role="status">
+    <p
+      className="app-rise-in rounded-xl bg-amber-50 px-3.5 py-2.5 text-sm text-amber-900 ring-1 ring-amber-600/20"
+      role="status"
+    >
       Still waiting on a render — this is taking longer than usual. It will
       time out and become retryable shortly.
     </p>

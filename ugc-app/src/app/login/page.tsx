@@ -36,8 +36,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <main className="app-canvas flex min-h-dvh items-center justify-center px-6 py-12">
-      <div className="w-full max-w-md">
+    <main className="app-canvas relative flex min-h-dvh items-center justify-center overflow-hidden px-6 py-12">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -left-24 top-1/4 h-72 w-72 animate-pulse rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -right-24 bottom-1/4 h-80 w-80 animate-pulse rounded-full bg-blue-400/10 blur-3xl [animation-delay:1.2s]" />
+      </div>
+
+      <div className="app-rise-in w-full max-w-md">
         <div className="mb-8">
           <Link
             href="/"

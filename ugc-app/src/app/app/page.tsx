@@ -16,6 +16,7 @@ import { requireOrganization } from "@/lib/customer/organization";
 import { Card, CardLink } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Stat } from "@/components/ui/stat";
+import { AnimatedNumber } from "@/components/ui/animated-number";
 import { Field, inputClasses } from "@/components/ui/field";
 import { SubmitButton } from "@/components/ui/loading-button";
 import { buttonClasses, ButtonIcon } from "@/components/ui/button";
@@ -60,7 +61,7 @@ export default async function AppHomePage() {
   const canGenerate = brandReady && hasUploads;
 
   return (
-    <div className="grid gap-10">
+    <div className="app-stagger grid gap-10">
       <section className="max-w-2xl">
         <Eyebrow>Workspace</Eyebrow>
         <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight text-balance sm:text-5xl">
@@ -75,19 +76,19 @@ export default async function AppHomePage() {
       <section className="grid gap-4 sm:grid-cols-3">
         <Stat
           label="Brand profile"
-          value={`${completion.percent}%`}
+          value={<AnimatedNumber value={completion.percent} suffix="%" />}
           hint={`${completion.completedRequired} of ${completion.totalRequired} required answers`}
           accent={brandReady ? "positive" : "warning"}
         />
         <Stat
           label="Clips uploaded"
-          value={uploads.length}
+          value={<AnimatedNumber value={uploads.length} />}
           hint={hasUploads ? "Ready to use" : "Upload to get started"}
           icon={<UploadCloud className="size-4" aria-hidden="true" />}
         />
         <Stat
           label="Videos ready"
-          value={readyOutputs}
+          value={<AnimatedNumber value={readyOutputs} />}
           hint={
             renderingOutputs > 0
               ? `${renderingOutputs} generating now`

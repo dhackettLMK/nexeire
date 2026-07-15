@@ -20,6 +20,7 @@ import { Field, inputClasses } from "@/components/ui/field";
 import { buttonClasses } from "@/components/ui/button";
 import { ActionForm } from "@/components/ui/action-form";
 import { SubmitButton } from "@/components/ui/loading-button";
+import { AnimatedNumber } from "@/components/ui/animated-number";
 import { cn } from "@/lib/utils";
 
 const dtClass =
@@ -133,14 +134,17 @@ function AssetLink({
   );
 }
 
-function AssetCard({ asset }: { asset: SignedAsset }) {
+function AssetCard({ asset, index }: { asset: SignedAsset; index: number }) {
   const updateAction = updateOrganizationAssetAction.bind(null, asset.id);
   const deleteAction = deleteOrganizationAssetAction.bind(null, asset.id);
   const updateFormId = `asset_update_${asset.id}`;
   const tags = asset.tags ?? [];
 
   return (
-    <Card className="grid overflow-hidden p-0">
+    <Card
+      className="app-rise-in grid overflow-hidden p-0"
+      style={{ animationDelay: `${Math.min(index, 7) * 70}ms` }}
+    >
       <div className="aspect-video bg-muted ring-1 ring-inset ring-foreground/[0.06]">
         {asset.thumbnailUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -351,7 +355,7 @@ export default async function AssetsPage() {
   ).length;
 
   return (
-    <div className="grid gap-8">
+    <div className="app-stagger grid gap-8">
       <PageHeader
         eyebrow="Step 02"
         title="B-roll library"
@@ -376,19 +380,21 @@ export default async function AssetsPage() {
           <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
             <dt className={dtClass}>Total</dt>
             <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
-              {assets.length}
+              <AnimatedNumber value={assets.length} />
             </dd>
           </div>
           <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
             <dt className={dtClass}>Selected</dt>
             <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
-              {selectedCount}
+              <AnimatedNumber value={selectedCount} />
             </dd>
           </div>
           <div className="rounded-xl bg-muted/60 px-3.5 py-3 ring-1 ring-foreground/[0.04]">
             <dt className={dtClass}>Tagged</dt>
             <dd className="mt-1.5 font-display text-lg font-medium tabular-nums">
-              {assets.filter((asset) => (asset.tags ?? []).length > 0).length}
+              <AnimatedNumber
+                value={assets.filter((asset) => (asset.tags ?? []).length > 0).length}
+              />
             </dd>
           </div>
         </dl>
@@ -396,8 +402,8 @@ export default async function AssetsPage() {
 
       {signedAssets.length > 0 ? (
         <section className="grid gap-4 xl:grid-cols-2">
-          {signedAssets.map((asset) => (
-            <AssetCard key={asset.id} asset={asset} />
+          {signedAssets.map((asset, index) => (
+            <AssetCard key={asset.id} asset={asset} index={index} />
           ))}
         </section>
       ) : (

@@ -30,17 +30,33 @@ export type NavItem = {
   icon: NavIcon;
 };
 
+// Row height + gap the sliding indicator below is keyed to (h-11 + gap-1).
+const NAV_ROW_HEIGHT = 44;
+const NAV_ROW_GAP = 4;
+
 export function AppNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
+  const activeIndex = items.findIndex((item) =>
+    item.href === "/app" ? pathname === "/app" : pathname.startsWith(item.href),
+  );
 
   return (
-    <nav className="mt-8 grid gap-0.5">
-      {items.map((item) => {
+    <nav className="relative mt-8 grid gap-1" aria-label="Primary">
+      <span
+        aria-hidden="true"
+        className={cn(
+          "absolute inset-x-0 top-0 h-11 rounded-xl bg-card shadow-sm ring-1 ring-foreground/[0.06]",
+          "transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          "motion-reduce:transition-none",
+          activeIndex === -1 && "opacity-0",
+        )}
+        style={{
+          transform: `translateY(${Math.max(activeIndex, 0) * (NAV_ROW_HEIGHT + NAV_ROW_GAP)}px)`,
+        }}
+      />
+      {items.map((item, index) => {
         const Icon = ICONS[item.icon];
-        const active =
-          item.href === "/app"
-            ? pathname === "/app"
-            : pathname.startsWith(item.href);
+        const active = index === activeIndex;
 
         return (
           <Link
@@ -48,24 +64,16 @@ export function AppNav({ items }: { items: NavItem[] }) {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group relative inline-flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",
-              "transition-[background-color,box-shadow,color,ring-color] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+              "group relative z-10 inline-flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium",
+              "transition-colors duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]",
               active
-                ? "bg-card text-foreground shadow-sm ring-1 ring-foreground/[0.06]"
-                : "text-muted-foreground hover:bg-card/60 hover:text-foreground",
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
-            <span
-              className={cn(
-                "absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-primary",
-                "transition-opacity duration-300",
-                active ? "opacity-100" : "opacity-0",
-              )}
-              aria-hidden="true"
-            />
             <Icon
               className={cn(
-                "size-[1.05rem] shrink-0 transition-colors",
+                "size-[1.05rem] shrink-0 transition-colors duration-200",
                 active
                   ? "text-primary"
                   : "text-muted-foreground group-hover:text-foreground",

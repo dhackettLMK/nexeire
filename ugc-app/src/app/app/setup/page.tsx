@@ -26,7 +26,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
   }
 
   return (
-    <div className="mx-auto grid max-w-3xl gap-8">
+    <div className="app-stagger mx-auto grid max-w-3xl gap-8">
       <PageHeader
         eyebrow="Setup"
         title="Set up your workspace"

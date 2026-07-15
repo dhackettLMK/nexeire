@@ -142,7 +142,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         <div className="absolute -right-24 bottom-1/4 h-80 w-80 animate-pulse rounded-full bg-blue-400/10 blur-3xl [animation-delay:1.2s]" />
       </div>
 
-      <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="app-rise-in w-full max-w-md">
         <div className="mb-8">
           <div className="flex items-center gap-2">
             <Link

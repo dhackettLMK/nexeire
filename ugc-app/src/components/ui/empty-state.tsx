@@ -18,12 +18,16 @@ export function EmptyState({
   return (
     <Card
       className={cn(
-        "flex flex-col items-center justify-center gap-3 border-dashed py-14 text-center",
+        "app-rise-in relative flex flex-col items-center justify-center gap-3 overflow-hidden border-dashed py-14 text-center",
         className,
       )}
     >
       {icon ? (
-        <span className="flex size-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
+        <span className="relative flex size-12 items-center justify-center rounded-full bg-accent text-accent-foreground">
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 rounded-full bg-primary/15 blur-lg"
+          />
           {icon}
         </span>
       ) : null}

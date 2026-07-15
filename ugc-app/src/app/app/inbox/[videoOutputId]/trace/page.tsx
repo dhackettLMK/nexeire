@@ -216,7 +216,7 @@ export default async function VideoTracePage({ params }: TracePageProps) {
   const campaignScript = script as CampaignScript | null;
 
   return (
-    <div className="grid gap-8">
+    <div className="app-stagger grid gap-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <PageHeader
           eyebrow="Pipeline trace"

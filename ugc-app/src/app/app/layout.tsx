@@ -6,6 +6,7 @@ import {
   requireUser,
 } from "@/lib/customer/organization";
 import { AppNav, type NavItem } from "./app-nav";
+import { MobileNav } from "./mobile-nav";
 
 const navItems: NavItem[] = [
   { href: "/app", label: "Dashboard", icon: "dashboard" },
@@ -29,7 +30,12 @@ export default async function AppLayout({
 
   return (
     <div className="app-canvas min-h-dvh">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-[17rem] flex-col border-r border-border/70 bg-sidebar/80 px-4 py-6 backdrop-blur-xl lg:flex">
+      <MobileNav
+        items={visibleNavItems}
+        orgName={orgName}
+        orgInitial={orgInitial}
+      />
+      <aside className="app-glass fixed inset-y-0 left-0 z-20 hidden w-[17rem] flex-col border-r border-border/70 px-4 py-6 lg:flex">
         <Link href="/app" className="group block rounded-2xl px-2 py-1">
           <p className="font-mono text-[0.625rem] font-medium uppercase tracking-[0.32em] text-primary">
             Nexeire
@@ -60,7 +66,7 @@ export default async function AppLayout({
         </form>
       </aside>
       <div className="lg:pl-[17rem]">
-        <main className="mx-auto w-full max-w-6xl px-5 py-10 lg:px-10 lg:py-12">
+        <main className="mx-auto w-full max-w-6xl px-5 py-8 lg:px-10 lg:py-12">
           {children}
         </main>
       </div>
