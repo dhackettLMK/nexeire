@@ -14,67 +14,23 @@ export default function Home() {
     <main className="landing" aria-label="Nexeire">
       <div className="landing-bg" aria-hidden="true" />
 
-      <header className="landing-nav">
+      <div className="landing-shell">
         <Link href="/" className="landing-brand" aria-label="Nexeire home">
           <Image
             src="/nexeire-mark.png"
             alt=""
-            width={34}
-            height={34}
+            width={36}
+            height={36}
             priority
             className="landing-brand-mark"
           />
           <span className="landing-brand-name">nexeire</span>
         </Link>
-        <nav className="landing-nav-actions" aria-label="Account">
-          <Link href="/login" className="landing-navlink">
-            Log in
-          </Link>
-          <Link href="/signup" className="landing-btn landing-btn-primary">
-            Sign up
-          </Link>
-        </nav>
-      </header>
-
-      <section className="landing-hero">
-        <div className="landing-copy">
-          <span className="landing-badge">
-            <span className="landing-badge-dot" aria-hidden="true" />
-            Early access · Join the beta
-          </span>
-          <h1 className="landing-title">
-            Your content,
-            <br />
-            <em className="landing-title-accent">done overnight.</em>
-            <br />
-            by AI.
-          </h1>
-          <p className="landing-lede">
-            Most businesses burn budget on UGC creators, videographers, and
-            editors — and still wait weeks for content. Nexeire replaces your
-            entire production team. Upload raw clips from your phone. Get
-            finished, platform-ready videos back.
-          </p>
-          <div className="landing-cta">
-            <Link
-              href="/signup"
-              className="landing-btn landing-btn-primary landing-btn-lg"
-            >
-              Sign up
-            </Link>
-            <Link
-              href="/login"
-              className="landing-btn landing-btn-ghost landing-btn-lg"
-            >
-              Log in
-            </Link>
-          </div>
-        </div>
 
         <div className="landing-visual" aria-hidden="true">
+          <div className="landing-glow" />
           <div className="landing-globe">
-            <span className="landing-globe-meridian" />
-            <span className="landing-globe-equator" />
+            <div className="landing-globe-sprite" />
           </div>
           <div className="landing-phone">
             <div className="landing-phone-notch" />
@@ -83,7 +39,10 @@ export default function Home() {
               <span className="landing-phone-brand">nexeire</span>
             </div>
             <div className="landing-phone-screen">
-              <p className="landing-phone-title">New batch</p>
+              <div className="landing-phone-head">
+                <p className="landing-phone-title">New batch</p>
+                <span className="landing-phone-spinner" />
+              </div>
               <p className="landing-phone-sub">Processing your clips…</p>
               <ul className="landing-checklist">
                 {checklist.map((item, i) => (
@@ -95,7 +54,16 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+
+        <nav className="landing-cta" aria-label="Account">
+          <Link href="/login" className="landing-btn landing-btn-ghost">
+            Log in
+          </Link>
+          <Link href="/signup" className="landing-btn landing-btn-primary">
+            Sign up
+          </Link>
+        </nav>
+      </div>
     </main>
   );
 }
