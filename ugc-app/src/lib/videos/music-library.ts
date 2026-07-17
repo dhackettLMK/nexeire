@@ -22,8 +22,8 @@ export const musicLibraryTracks: MusicLibraryTrack[] = [
   },
   {
     id: "track-2",
-    name: "Chill",
-    description: "Laid-back, easygoing instrumental",
+    name: "Sabrina Carpenter Upbeat Inspired Beat",
+    description: "Bright, upbeat pop instrumental",
     storagePath: "track-2.mp3",
   },
   {
