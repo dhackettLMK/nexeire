@@ -21,7 +21,7 @@ were deliberately deleted (see `supabase/migrations/20260627000006_great_deletio
 ## Stack
 - **Next.js 16** (App Router, Turbopack) + **React 19**, TypeScript
 - **Supabase** — Postgres + Auth (SSR via `@supabase/ssr`) + Storage + RLS. Live
-  project ref: `npjpkgebxegmzpsgyavr` ("UGC-App").
+  project ref: `zqrzmmzfwqodwpwtojgv` ("Nexeire").
 - **Remotion** (`remotion`, `@remotion/player`, `@remotion/vercel`) for rendering
 - **Vercel AI SDK** (`ai`, `@ai-sdk/openai`) for script generation
 - **Tailwind v4** + `radix-ui`; light "editorial" design system in `src/components/ui`
