@@ -28,8 +28,8 @@ export const musicLibraryTracks: MusicLibraryTrack[] = [
   },
   {
     id: "track-3",
-    name: "Momentum",
-    description: "Driving, energetic instrumental",
+    name: "Michael Jackson Inspired Beat",
+    description: "Groovy, funk-driven pop instrumental",
     storagePath: "track-3.mp3",
   },
 ];
