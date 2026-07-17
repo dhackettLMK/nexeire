@@ -13,6 +13,7 @@ import {
 import { generateVideosAction } from "@/app/app/actions";
 import { maxBatchSize, minBatchSize } from "@/lib/batches/rules";
 import { requireOrganization } from "@/lib/customer/organization";
+import { musicLibraryTracks } from "@/lib/videos/music-library";
 import { Card, CardLink } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Stat } from "@/components/ui/stat";
@@ -115,7 +116,7 @@ export default async function AppHomePage() {
           {canGenerate ? (
             <form
               action={generateVideosAction}
-              className="grid gap-4 sm:grid-cols-[150px_170px_auto] sm:items-end"
+              className="grid gap-4 sm:grid-cols-[150px_170px_200px_auto] sm:items-end"
             >
               <Field label="How many" htmlFor="batch_size">
                 <input
@@ -138,6 +139,21 @@ export default async function AppHomePage() {
                   defaultValue={30}
                   className={inputClasses}
                 />
+              </Field>
+              <Field label="Background music" htmlFor="music_track_id">
+                <select
+                  id="music_track_id"
+                  name="music_track_id"
+                  defaultValue=""
+                  className={inputClasses}
+                >
+                  <option value="">No music</option>
+                  {musicLibraryTracks.map((track) => (
+                    <option key={track.id} value={track.id}>
+                      {track.name}
+                    </option>
+                  ))}
+                </select>
               </Field>
               <SubmitButton icon={<Sparkles className="size-4" />}>
                 Generate videos

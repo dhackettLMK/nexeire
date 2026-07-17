@@ -38,6 +38,7 @@ import {
 } from "@/lib/videos/background-generation";
 import { staleRenderMessage, sweepStaleRenderJobs } from "@/lib/providers/stale-jobs";
 import { pollRemotionRenders } from "@/lib/videos/render-progress";
+import { findMusicLibraryTrack } from "@/lib/videos/music-library";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
 const assetTagSet = new Set<string>(assetTags);
@@ -480,6 +481,8 @@ export async function generateVideosAction(formData: FormData) {
   const videoLengthSeconds = validateVideoLengthSeconds(
     optionalInteger(formData, "video_length_seconds", 30),
   );
+  const musicTrackId =
+    findMusicLibraryTrack(optionalString(formData, "music_track_id"))?.id ?? null;
   const title = campaignTitleFromProfile(profile, "UGC videos");
   const goal =
     profile.promoting ?? profile.offer_cta ?? "Generate UGC ad concepts";
@@ -495,6 +498,7 @@ export async function generateVideosAction(formData: FormData) {
       goal,
       batch_size: batchSize,
       video_length_seconds: videoLengthSeconds,
+      music_track_id: musicTrackId,
       status: "queued",
       admin_review_required: false,
     })

@@ -324,6 +324,14 @@ function musicSourceValue(
   return musicSources.has(source) ? source : fallback;
 }
 
+const musicLibraryTrackIdPattern = /^[a-z0-9-]{1,64}$/;
+
+function musicLibraryTrackIdValue(value: unknown, fallback: string | null) {
+  const trackId = stringValue(value);
+
+  return musicLibraryTrackIdPattern.test(trackId) ? trackId : fallback;
+}
+
 function trimStartValue(
   value: unknown,
   fallback: number,
@@ -538,6 +546,7 @@ export function createDefaultRenderPlan(input: {
   script: RenderPlanScriptInput;
   assets: RenderPlanAsset[];
   durationSeconds?: number | null;
+  musicTrackId?: string | null;
 }): RenderPlan {
   const visualAssets = input.assets.filter(isVisualRenderPlanAsset);
   const durationSeconds = durationSecondsValue(
@@ -589,9 +598,9 @@ export function createDefaultRenderPlan(input: {
     captionStyle: defaultCaptionStyle,
     voiceoverCues: null,
     voiceoverStale: false,
-    musicSource: "none",
+    musicSource: input.musicTrackId ? "library" : "none",
     musicUrl: null,
-    musicAssetId: null,
+    musicAssetId: input.musicTrackId ?? null,
     musicStoragePath: null,
     musicVolume: 0.18,
     duckMusicUnderVoiceover: true,
@@ -682,6 +691,10 @@ export function sanitizeRenderPlan(input: {
     musicSource === "asset" && musicAssetId
       ? audioAssetsById.get(musicAssetId) ?? null
       : null;
+  const musicLibraryTrackId =
+    musicSource === "library"
+      ? musicLibraryTrackIdValue(record.musicAssetId, input.fallback.musicAssetId)
+      : null;
   const musicStoragePath =
     musicSource === "upload"
       ? storagePathValue(
@@ -731,7 +744,7 @@ export function sanitizeRenderPlan(input: {
         : input.fallback.voiceoverStale,
     musicSource,
     musicUrl:
-      musicSource === "none" || musicSource === "library"
+      musicSource === "none"
         ? null
         : musicSource === "asset" && !musicAsset
           ? null
@@ -739,7 +752,9 @@ export function sanitizeRenderPlan(input: {
     musicAssetId:
       musicSource === "asset"
         ? musicAsset?.id ?? null
-        : null,
+        : musicSource === "library"
+          ? musicLibraryTrackId
+          : null,
     musicStoragePath,
     musicVolume: roundSeconds(
       clamp(
@@ -760,6 +775,7 @@ export function normalizePersistedRenderPlan(input: {
   script: RenderPlanScriptInput;
   assets: RenderPlanAsset[];
   durationSeconds?: number | null;
+  musicTrackId?: string | null;
 }) {
   if (!input.value || typeof input.value !== "object") {
     return null;
@@ -769,6 +785,7 @@ export function normalizePersistedRenderPlan(input: {
     script: input.script,
     assets: input.assets,
     durationSeconds: input.durationSeconds,
+    musicTrackId: input.musicTrackId,
   });
 
   return sanitizeRenderPlan({
@@ -796,7 +813,7 @@ export function withSignedAssetUrls(
     musicUrl:
       plan.musicSource === "asset"
         ? musicAsset?.signedUrl ?? plan.musicUrl
-        : plan.musicSource === "upload"
+        : plan.musicSource === "upload" || plan.musicSource === "library"
           ? musicUrl ?? plan.musicUrl
           : plan.musicSource === "none"
             ? null
