@@ -16,8 +16,8 @@ export type MusicLibraryTrack = {
 export const musicLibraryTracks: MusicLibraryTrack[] = [
   {
     id: "track-1",
-    name: "Uplift",
-    description: "Bright, upbeat instrumental",
+    name: "Young Kanye West Inspired Instrumental",
+    description: "Soulful, sample-driven boom-bap instrumental",
     storagePath: "track-1.mp3",
   },
   {
