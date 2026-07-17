@@ -28,6 +28,7 @@ import {
 } from "@/lib/providers/rendering";
 import { generateVoiceover } from "@/lib/providers/voiceover";
 import { generateScriptVariants } from "@/lib/scripts/generator";
+import { musicLibraryPublicUrl } from "@/lib/videos/music-library";
 import type {
   ScriptGenerationAsset,
   ScriptGenerationBrief,
@@ -57,6 +58,7 @@ type CampaignGenerationCampaign = {
   batch_size: number;
   status: string;
   video_length_seconds: number;
+  music_track_id: string | null;
 };
 
 type CampaignGenerationScript = {
@@ -166,7 +168,7 @@ export async function runCampaignGenerationWorker(input: {
 
   const { data: campaign, error: claimError } = await query
     .select(
-      "id,organization_id,brand_profile_id,research_report_id,title,goal,batch_size,status,video_length_seconds",
+      "id,organization_id,brand_profile_id,research_report_id,title,goal,batch_size,status,video_length_seconds,music_track_id",
     )
     .maybeSingle();
 
@@ -279,17 +281,30 @@ export async function runVideoOutputRetryWorker(input: {
       throw new Error("Script not found for retry");
     }
 
-    const { data: script, error: scriptError } = await supabase
-      .from("campaign_scripts")
-      .select(
-        "id,title,hook,voiceover,scene_plan,render_plan,suggested_broll,cta,caption",
-      )
-      .eq("id", video.campaign_script_id)
-      .eq("organization_id", input.organizationId)
-      .single();
+    const [{ data: script, error: scriptError }, { data: campaign, error: campaignError }] =
+      await Promise.all([
+        supabase
+          .from("campaign_scripts")
+          .select(
+            "id,title,hook,voiceover,scene_plan,render_plan,suggested_broll,cta,caption",
+          )
+          .eq("id", video.campaign_script_id)
+          .eq("organization_id", input.organizationId)
+          .single(),
+        supabase
+          .from("campaigns")
+          .select("music_track_id")
+          .eq("id", video.campaign_id)
+          .eq("organization_id", input.organizationId)
+          .single(),
+      ]);
 
     if (scriptError || !script) {
       throw new Error("Script not found for retry");
+    }
+
+    if (campaignError || !campaign) {
+      throw new Error("Campaign not found for retry");
     }
 
     await processVideoOutput(
@@ -299,6 +314,7 @@ export async function runVideoOutputRetryWorker(input: {
       input.videoOutputId,
       script as CampaignGenerationScript,
       video.duration_seconds,
+      campaign.music_track_id,
     );
     await refreshCampaignStatus(
       supabase,
@@ -616,6 +632,7 @@ async function startCampaignGeneration(
       video.id,
       script,
       plan.campaign.video_length_seconds,
+      plan.campaign.music_track_id,
     );
   }
 
@@ -712,6 +729,7 @@ async function processVideoOutput(
     render_plan: unknown;
   },
   durationSeconds: number | null,
+  musicTrackId: string | null,
 ) {
   let activeProviderJobKey: string | null = null;
 
@@ -747,11 +765,13 @@ async function processVideoOutput(
         script: scriptInput,
         assets: availableAssets,
         durationSeconds,
+        musicTrackId,
       }) ??
       createDefaultRenderPlan({
         script: scriptInput,
         assets: availableAssets,
         durationSeconds,
+        musicTrackId,
       });
     let renderPlanWithVoiceover: RenderPlan;
     let voiceoverPath = renderPlan.voiceoverStoragePath;
@@ -850,7 +870,9 @@ async function processVideoOutput(
             customerAssetBucket,
             renderPlanWithVoiceover.musicStoragePath,
           )
-        : null;
+        : renderPlanWithVoiceover.musicSource === "library"
+          ? musicLibraryPublicUrl(renderPlanWithVoiceover.musicAssetId)
+          : null;
     const signedRenderPlan = withSignedAssetUrls(
       renderPlanWithVoiceover,
       signedAssets,
