@@ -417,6 +417,70 @@ describe("render plans", () => {
     expect(plan.scenes[1].transition).toBe("cut");
   });
 
+  it("defaults to a library track when a music track id is provided", () => {
+    const fallback = createDefaultRenderPlan({
+      script,
+      assets,
+      durationSeconds: 20,
+      musicTrackId: "track-2",
+    });
+
+    expect(fallback.musicSource).toBe("library");
+    expect(fallback.musicAssetId).toBe("track-2");
+    expect(fallback.musicUrl).toBeNull();
+  });
+
+  it("resolves library music URLs from the signed music URL argument", () => {
+    const fallback = createDefaultRenderPlan({
+      script,
+      assets,
+      durationSeconds: 20,
+    });
+    const plan = sanitizeRenderPlan({
+      value: {
+        ...fallback,
+        musicSource: "library",
+        musicAssetId: "track-1",
+        duckMusicUnderVoiceover: true,
+      },
+      fallback,
+      assets,
+      script,
+    });
+    const signedPlan = withSignedAssetUrls(
+      plan,
+      assets,
+      null,
+      "https://storage.example/music-library/track-1.mp3",
+    );
+
+    expect(plan.musicSource).toBe("library");
+    expect(plan.musicAssetId).toBe("track-1");
+    expect(signedPlan.musicUrl).toBe(
+      "https://storage.example/music-library/track-1.mp3",
+    );
+  });
+
+  it("rejects an invalid library track id", () => {
+    const fallback = createDefaultRenderPlan({
+      script,
+      assets,
+      durationSeconds: 20,
+    });
+    const plan = sanitizeRenderPlan({
+      value: {
+        ...fallback,
+        musicSource: "library",
+        musicAssetId: "../not-a-track",
+      },
+      fallback,
+      assets,
+      script,
+    });
+
+    expect(plan.musicAssetId).toBeNull();
+  });
+
   it("keeps generated voiceover and uploaded music storage paths safe", () => {
     const fallback = createDefaultRenderPlan({
       script,
