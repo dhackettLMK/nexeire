@@ -439,6 +439,82 @@ export function compositionDurationSeconds(plan: {
   return roundSeconds(Math.max(videoSeconds, voiceoverEndSeconds(plan)));
 }
 
+export type SubtitleLine = {
+  text: string;
+  startSeconds: number;
+  endSeconds: number;
+};
+
+const sentenceEndPattern = /[.!?…]$/;
+
+// Group word-level voiceover cues into short, readable subtitle lines that
+// transcribe exactly what's being spoken. Breaks on sentence punctuation or
+// after a maximum number of words, whichever comes first.
+export function subtitleLinesFromCues(
+  cues: CaptionCue[],
+  maxWords = 7,
+): SubtitleLine[] {
+  const lines: SubtitleLine[] = [];
+  let words: string[] = [];
+  let startSeconds = 0;
+  let endSeconds = 0;
+
+  function flush() {
+    if (words.length === 0) {
+      return;
+    }
+
+    lines.push({
+      text: words.join(" "),
+      startSeconds: roundSeconds(startSeconds),
+      endSeconds: roundSeconds(endSeconds),
+    });
+    words = [];
+  }
+
+  for (const cue of cues) {
+    const text = cue.text.trim();
+
+    if (!text) {
+      continue;
+    }
+
+    if (words.length === 0) {
+      startSeconds = cue.startSeconds;
+    }
+
+    words.push(text);
+    endSeconds = cue.endSeconds;
+
+    if (words.length >= maxWords || sentenceEndPattern.test(text)) {
+      flush();
+    }
+  }
+
+  flush();
+
+  return lines;
+}
+
+// The subtitle line on screen at a given time. A line stays up until the next
+// one begins (covering short gaps between words); once the last line's words
+// finish, nothing shows.
+export function activeSubtitleLine(
+  lines: SubtitleLine[],
+  absoluteSeconds: number,
+): SubtitleLine | null {
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const nextStart = lines[index + 1]?.startSeconds ?? line.endSeconds;
+
+    if (absoluteSeconds >= line.startSeconds && absoluteSeconds < nextStart) {
+      return line;
+    }
+  }
+
+  return null;
+}
+
 export function isAudioRenderPlanAsset(asset: RenderPlanAsset) {
   if (asset.contentType) {
     return asset.contentType.toLowerCase().startsWith("audio/");

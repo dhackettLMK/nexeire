@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  activeSubtitleLine,
   compositionDurationSeconds,
   createDefaultRenderPlan,
   maxTotalDurationSeconds,
@@ -8,6 +9,7 @@ import {
   renderPlanVersion,
   resolveCaptionStyle,
   sanitizeRenderPlan,
+  subtitleLinesFromCues,
   withSignedAssetUrls,
 } from "@/lib/videos/render-plan";
 
@@ -143,6 +145,37 @@ describe("render plans", () => {
         voiceoverCues: [{ text: "hi", startSeconds: 0, endSeconds: 4 }],
       }),
     ).toBe(18);
+  });
+
+  it("groups voiceover word cues into readable subtitle lines", () => {
+    const cues = [
+      { text: "Stop", startSeconds: 0, endSeconds: 0.3 },
+      { text: "wasting", startSeconds: 0.3, endSeconds: 0.7 },
+      { text: "time.", startSeconds: 0.7, endSeconds: 1.1 },
+      { text: "Book", startSeconds: 1.2, endSeconds: 1.5 },
+      { text: "your", startSeconds: 1.5, endSeconds: 1.7 },
+      { text: "spot", startSeconds: 1.7, endSeconds: 2.0 },
+      { text: "today", startSeconds: 2.0, endSeconds: 2.4 },
+      { text: "and", startSeconds: 2.4, endSeconds: 2.6 },
+      { text: "save.", startSeconds: 2.6, endSeconds: 3.0 },
+    ];
+    const lines = subtitleLinesFromCues(cues, 7);
+
+    // First line breaks on the sentence-ending period after "time."
+    expect(lines[0]).toMatchObject({
+      text: "Stop wasting time.",
+      startSeconds: 0,
+      endSeconds: 1.1,
+    });
+    // Second line runs to the next sentence end ("save.").
+    expect(lines[1].text).toBe("Book your spot today and save.");
+
+    expect(activeSubtitleLine(lines, 0.5)?.text).toBe("Stop wasting time.");
+    expect(activeSubtitleLine(lines, 2.2)?.text).toBe(
+      "Book your spot today and save.",
+    );
+    // Before any narration starts, nothing shows.
+    expect(activeSubtitleLine(lines, -1)).toBeNull();
   });
 
   it("sanitizes edited scenes against available asset ids", () => {

@@ -11,12 +11,15 @@ import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { Fragment, type CSSProperties } from "react";
 import {
+  activeSubtitleLine,
   isWordSyncedCaptionPreset,
   resolveCaptionStyle,
+  subtitleLinesFromCues,
   type CaptionCue,
   type CaptionStyle,
   type RenderPlan,
   type RenderPlanScene,
+  type SubtitleLine,
 } from "../lib/videos/render-plan";
 
 type UGCVideoProps = {
@@ -342,12 +345,14 @@ function SceneLayer({
   plan,
   scene,
   wordCues,
+  subtitleLines,
   fps,
 }: {
   hiddenText: Set<string>;
   plan: RenderPlan;
   scene: RenderPlanScene;
   wordCues: CaptionCue[];
+  subtitleLines: SubtitleLine[];
   fps: number;
 }) {
   const frame = useCurrentFrame();
@@ -362,6 +367,15 @@ function SceneLayer({
   );
   const caption = scene.caption.trim();
   const showCaption = caption.length > 0 && !hiddenText.has(normalizeText(caption));
+  // Subtitle-style captions transcribe the voiceover (what the agent actually
+  // says); only fall back to the script's on-screen text when there's no
+  // narration to transcribe.
+  const staticCaptionText =
+    subtitleLines.length > 0
+      ? activeSubtitleLine(subtitleLines, absoluteSeconds)?.text ?? null
+      : showCaption
+        ? caption
+        : null;
   const trimBefore = secondsToFrameOffset(scene.trimStartSeconds, fps);
   const trimAfter =
     scene.trimEndSeconds === null
@@ -413,8 +427,8 @@ function SceneLayer({
             cues={wordCues}
             style={captionStyle}
           />
-        ) : showCaption ? (
-          <StaticCaption caption={caption} style={captionStyle} />
+        ) : staticCaptionText ? (
+          <StaticCaption caption={staticCaptionText} style={captionStyle} />
         ) : null}
       </AbsoluteFill>
     </AbsoluteFill>
@@ -438,6 +452,7 @@ export function UGCVideo({ plan }: UGCVideoProps) {
   const { durationInFrames } = useVideoConfig();
   const hiddenText = hiddenOverlayText(plan);
   const wordCues = voiceoverCues(plan);
+  const subtitleLines = subtitleLinesFromCues(wordCues);
   const reducedMotion = prefersReducedMotion();
   const musicVolume = Math.min(1, Math.max(0, plan.musicVolume));
   const musicDuckedVolume = Math.min(musicVolume, musicVolume * 0.45);
@@ -497,6 +512,7 @@ export function UGCVideo({ plan }: UGCVideoProps) {
                   plan={plan}
                   scene={scene}
                   wordCues={wordCues}
+                  subtitleLines={subtitleLines}
                   fps={fps}
                 />
               </TransitionSeries.Sequence>
