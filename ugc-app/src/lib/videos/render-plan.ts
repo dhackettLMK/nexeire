@@ -6,6 +6,7 @@ export const defaultRenderDurationSeconds = 30;
 export const maxRenderScenes = 20;
 export const maxTotalDurationSeconds = 90;
 export const minSceneDurationSeconds = 1;
+export const defaultMusicVolume = 0.2;
 
 export type CaptionPreset =
   | "hormozi"
@@ -547,6 +548,8 @@ export function createDefaultRenderPlan(input: {
   assets: RenderPlanAsset[];
   durationSeconds?: number | null;
   musicTrackId?: string | null;
+  musicVolume?: number | null;
+  duckMusicUnderVoiceover?: boolean;
 }): RenderPlan {
   const visualAssets = input.assets.filter(isVisualRenderPlanAsset);
   const durationSeconds = durationSecondsValue(
@@ -602,8 +605,10 @@ export function createDefaultRenderPlan(input: {
     musicUrl: null,
     musicAssetId: input.musicTrackId ?? null,
     musicStoragePath: null,
-    musicVolume: 0.18,
-    duckMusicUnderVoiceover: true,
+    musicVolume: roundSeconds(
+      clamp(input.musicVolume ?? defaultMusicVolume, 0, 1),
+    ),
+    duckMusicUnderVoiceover: input.duckMusicUnderVoiceover ?? true,
   });
 }
 
@@ -776,6 +781,8 @@ export function normalizePersistedRenderPlan(input: {
   assets: RenderPlanAsset[];
   durationSeconds?: number | null;
   musicTrackId?: string | null;
+  musicVolume?: number | null;
+  duckMusicUnderVoiceover?: boolean;
 }) {
   if (!input.value || typeof input.value !== "object") {
     return null;
@@ -786,6 +793,8 @@ export function normalizePersistedRenderPlan(input: {
     assets: input.assets,
     durationSeconds: input.durationSeconds,
     musicTrackId: input.musicTrackId,
+    musicVolume: input.musicVolume,
+    duckMusicUnderVoiceover: input.duckMusicUnderVoiceover,
   });
 
   return sanitizeRenderPlan({

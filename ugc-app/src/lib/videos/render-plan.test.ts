@@ -430,6 +430,48 @@ describe("render plans", () => {
     expect(fallback.musicUrl).toBeNull();
   });
 
+  it("applies the chosen music volume and duck setting literally", () => {
+    const fallback = createDefaultRenderPlan({
+      script,
+      assets,
+      durationSeconds: 20,
+      musicTrackId: "track-2",
+      musicVolume: 0.5,
+      duckMusicUnderVoiceover: false,
+    });
+
+    expect(fallback.musicVolume).toBe(0.5);
+    expect(fallback.duckMusicUnderVoiceover).toBe(false);
+  });
+
+  it("clamps an out-of-range music volume into 0-1", () => {
+    const quiet = createDefaultRenderPlan({
+      script,
+      assets,
+      musicTrackId: "track-1",
+      musicVolume: -3,
+    });
+    const loud = createDefaultRenderPlan({
+      script,
+      assets,
+      musicTrackId: "track-1",
+      musicVolume: 4,
+    });
+
+    expect(quiet.musicVolume).toBe(0);
+    expect(loud.musicVolume).toBe(1);
+  });
+
+  it("falls back to the default music volume when none is given", () => {
+    const fallback = createDefaultRenderPlan({
+      script,
+      assets,
+      musicTrackId: "track-1",
+    });
+
+    expect(fallback.musicVolume).toBe(0.2);
+  });
+
   it("resolves library music URLs from the signed music URL argument", () => {
     const fallback = createDefaultRenderPlan({
       script,

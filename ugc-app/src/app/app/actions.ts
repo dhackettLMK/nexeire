@@ -85,6 +85,14 @@ function requiredString(formData: FormData, key: string) {
   return value;
 }
 
+// The dashboard music knob submits a 0-100 percentage in 10% steps; the render
+// plan stores volume as a 0-1 fraction.
+function normalizeMusicVolumePercent(percent: number) {
+  const clamped = Math.min(100, Math.max(0, Math.round(percent / 10) * 10));
+
+  return clamped / 100;
+}
+
 function slugify(value: string) {
   const base = value
     .toLowerCase()
@@ -483,6 +491,9 @@ export async function generateVideosAction(formData: FormData) {
   );
   const musicTrackId =
     findMusicLibraryTrack(optionalString(formData, "music_track_id"))?.id ?? null;
+  const musicVolume = musicTrackId
+    ? normalizeMusicVolumePercent(optionalInteger(formData, "music_volume", 20))
+    : null;
   const title = campaignTitleFromProfile(profile, "UGC videos");
   const goal =
     profile.promoting ?? profile.offer_cta ?? "Generate UGC ad concepts";
@@ -499,6 +510,7 @@ export async function generateVideosAction(formData: FormData) {
       batch_size: batchSize,
       video_length_seconds: videoLengthSeconds,
       music_track_id: musicTrackId,
+      music_volume: musicVolume,
       status: "queued",
       admin_review_required: false,
     })
