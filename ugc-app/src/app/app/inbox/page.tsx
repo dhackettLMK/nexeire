@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Download, GitBranch, Inbox, RotateCcw } from "lucide-react";
 import { retryVideoOutputAction } from "@/app/app/actions";
 import { RenderPollingBridge } from "@/components/videos/render-polling";
+import { VideoPreview } from "@/components/videos/video-preview";
 import { signedUrlTtlSeconds } from "@/lib/assets/validation";
 import { canRetryVideo, type VideoStatus } from "@/lib/batches/rules";
 import { staleRenderMessage } from "@/lib/providers/stale-jobs";
@@ -124,6 +125,7 @@ type VideoOutput = {
 
 type SignedVideoOutput = VideoOutput & {
   downloadUrl: string | null;
+  previewUrl: string | null;
 };
 
 function formatDate(value: string) {
@@ -158,7 +160,7 @@ export default async function InboxPage() {
   const signedOutputs: SignedVideoOutput[] = await Promise.all(
     outputs.map(async (output) => {
       if (output.status !== "ready" || !output.video_path) {
-        return { ...output, downloadUrl: null };
+        return { ...output, downloadUrl: null, previewUrl: null };
       }
 
       const { data } = await supabase.storage
@@ -166,11 +168,12 @@ export default async function InboxPage() {
         .createSignedUrl(output.video_path, signedUrlTtlSeconds);
 
       if (!data?.signedUrl) {
-        return { ...output, downloadUrl: null };
+        return { ...output, downloadUrl: null, previewUrl: null };
       }
 
       return {
         ...output,
+        previewUrl: data.signedUrl,
         downloadUrl: videoDownloadUrl(data.signedUrl, output.title),
       };
     }),
@@ -233,6 +236,12 @@ export default async function InboxPage() {
                         <GitBranch className="size-4" aria-hidden="true" />
                         View trace
                       </Link>
+                      {output.previewUrl ? (
+                        <VideoPreview
+                          src={output.previewUrl}
+                          title={output.title}
+                        />
+                      ) : null}
                       {output.downloadUrl ? (
                         <a
                           href={output.downloadUrl}
