@@ -14,6 +14,9 @@ import { generateVideosAction } from "@/app/app/actions";
 import { maxBatchSize, minBatchSize } from "@/lib/batches/rules";
 import { requireOrganization } from "@/lib/customer/organization";
 import { musicLibraryTracks } from "@/lib/videos/music-library";
+
+// 0%, 10%, ... 100% — the discrete steps for the background-music volume knob.
+const musicVolumeOptions = Array.from({ length: 11 }, (_, index) => index * 10);
 import { Card, CardLink } from "@/components/ui/card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Stat } from "@/components/ui/stat";
@@ -113,9 +116,9 @@ export default async function AppHomePage() {
           {canGenerate ? (
             <form
               action={generateVideosAction}
-              className="grid gap-4 sm:grid-cols-[150px_170px_200px_auto] sm:items-end"
+              className="flex flex-wrap items-end gap-4"
             >
-              <Field label="How many" htmlFor="batch_size">
+              <Field label="How many" htmlFor="batch_size" className="w-[130px]">
                 <input
                   id="batch_size"
                   name="batch_size"
@@ -126,7 +129,11 @@ export default async function AppHomePage() {
                   className={inputClasses}
                 />
               </Field>
-              <Field label="Length (seconds)" htmlFor="video_length_seconds">
+              <Field
+                label="Length (seconds)"
+                htmlFor="video_length_seconds"
+                className="w-[150px]"
+              >
                 <input
                   id="video_length_seconds"
                   name="video_length_seconds"
@@ -137,7 +144,11 @@ export default async function AppHomePage() {
                   className={inputClasses}
                 />
               </Field>
-              <Field label="Background music" htmlFor="music_track_id">
+              <Field
+                label="Background music"
+                htmlFor="music_track_id"
+                className="w-[220px]"
+              >
                 <select
                   id="music_track_id"
                   name="music_track_id"
@@ -148,6 +159,25 @@ export default async function AppHomePage() {
                   {musicLibraryTracks.map((track) => (
                     <option key={track.id} value={track.id}>
                       {track.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field
+                label="Music volume"
+                htmlFor="music_volume"
+                hint="Applies when a track is picked."
+                className="w-[140px]"
+              >
+                <select
+                  id="music_volume"
+                  name="music_volume"
+                  defaultValue={20}
+                  className={inputClasses}
+                >
+                  {musicVolumeOptions.map((percent) => (
+                    <option key={percent} value={percent}>
+                      {percent}%
                     </option>
                   ))}
                 </select>

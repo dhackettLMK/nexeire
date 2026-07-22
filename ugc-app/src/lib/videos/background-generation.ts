@@ -59,6 +59,7 @@ type CampaignGenerationCampaign = {
   status: string;
   video_length_seconds: number;
   music_track_id: string | null;
+  music_volume: number | null;
 };
 
 type CampaignGenerationScript = {
@@ -168,7 +169,7 @@ export async function runCampaignGenerationWorker(input: {
 
   const { data: campaign, error: claimError } = await query
     .select(
-      "id,organization_id,brand_profile_id,research_report_id,title,goal,batch_size,status,video_length_seconds,music_track_id",
+      "id,organization_id,brand_profile_id,research_report_id,title,goal,batch_size,status,video_length_seconds,music_track_id,music_volume",
     )
     .maybeSingle();
 
@@ -293,7 +294,7 @@ export async function runVideoOutputRetryWorker(input: {
           .single(),
         supabase
           .from("campaigns")
-          .select("music_track_id")
+          .select("music_track_id,music_volume")
           .eq("id", video.campaign_id)
           .eq("organization_id", input.organizationId)
           .single(),
@@ -315,6 +316,7 @@ export async function runVideoOutputRetryWorker(input: {
       script as CampaignGenerationScript,
       video.duration_seconds,
       campaign.music_track_id,
+      campaign.music_volume,
     );
     await refreshCampaignStatus(
       supabase,
@@ -633,6 +635,7 @@ async function startCampaignGeneration(
       script,
       plan.campaign.video_length_seconds,
       plan.campaign.music_track_id,
+      plan.campaign.music_volume,
     );
   }
 
@@ -730,6 +733,7 @@ async function processVideoOutput(
   },
   durationSeconds: number | null,
   musicTrackId: string | null,
+  musicVolume: number | null,
 ) {
   let activeProviderJobKey: string | null = null;
 
@@ -759,6 +763,8 @@ async function processVideoOutput(
       organizationId,
     );
     const scriptInput = renderPlanScriptInput(script);
+    // The dashboard music knob is a literal volume, so auto-ducking is off on
+    // this path — the percentage the user picked is exactly what plays.
     const renderPlan =
       normalizePersistedRenderPlan({
         value: script.render_plan,
@@ -766,12 +772,16 @@ async function processVideoOutput(
         assets: availableAssets,
         durationSeconds,
         musicTrackId,
+        musicVolume,
+        duckMusicUnderVoiceover: false,
       }) ??
       createDefaultRenderPlan({
         script: scriptInput,
         assets: availableAssets,
         durationSeconds,
         musicTrackId,
+        musicVolume,
+        duckMusicUnderVoiceover: false,
       });
     let renderPlanWithVoiceover: RenderPlan;
     let voiceoverPath = renderPlan.voiceoverStoragePath;
