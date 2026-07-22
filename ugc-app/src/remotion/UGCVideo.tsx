@@ -4,6 +4,7 @@ import {
   OffthreadVideo,
   interpolate,
   useCurrentFrame,
+  useVideoConfig,
 } from "remotion";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
@@ -434,11 +435,30 @@ function hiddenOverlayText(plan: RenderPlan) {
 
 export function UGCVideo({ plan }: UGCVideoProps) {
   const fps = plan.fps || 30;
+  const { durationInFrames } = useVideoConfig();
   const hiddenText = hiddenOverlayText(plan);
   const wordCues = voiceoverCues(plan);
   const reducedMotion = prefersReducedMotion();
   const musicVolume = Math.min(1, Math.max(0, plan.musicVolume));
   const musicDuckedVolume = Math.min(musicVolume, musicVolume * 0.45);
+
+  // Clips are capped to their real length, so the scenes can total less than
+  // the composition (which is stretched to fit the voiceover). Hold the final
+  // clip across that gap instead of cutting to black mid-narration.
+  const baseSequenceFrames = plan.scenes.map((scene, index) => {
+    const presentation = reducedMotion ? null : transitionPresentation(scene);
+    const hasIncomingTransition = index > 0 && presentation !== null;
+
+    return (
+      secondsToFrames(scene.durationSeconds, fps) +
+      (hasIncomingTransition ? transitionFrames : 0)
+    );
+  });
+  const totalSequenceFrames = baseSequenceFrames.reduce(
+    (total, frames) => total + frames,
+    0,
+  );
+  const trailingHoldFrames = Math.max(0, durationInFrames - totalSequenceFrames);
 
   return (
     <AbsoluteFill style={{ background, color: "white" }}>
@@ -458,9 +478,10 @@ export function UGCVideo({ plan }: UGCVideoProps) {
         {plan.scenes.map((scene, index) => {
           const presentation = reducedMotion ? null : transitionPresentation(scene);
           const hasIncomingTransition = index > 0 && presentation !== null;
+          const isLastScene = index === plan.scenes.length - 1;
           const sequenceDuration =
-            secondsToFrames(scene.durationSeconds, fps) +
-            (hasIncomingTransition ? transitionFrames : 0);
+            baseSequenceFrames[index] +
+            (isLastScene ? trailingHoldFrames : 0);
 
           return (
             <Fragment key={scene.id}>

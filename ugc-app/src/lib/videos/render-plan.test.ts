@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  compositionDurationSeconds,
   createDefaultRenderPlan,
   maxTotalDurationSeconds,
   normalizePersistedRenderPlan,
@@ -66,7 +67,10 @@ describe("render plans", () => {
       durationSeconds: 20,
     });
 
-    expect(plan.durationSeconds).toBe(20);
+    // asset-2 is only 8s long, so its scene is capped to 8s instead of the
+    // even 10s split — the clip plays through instead of freezing. Total video
+    // shrinks to fit the clips (10 + 8 = 18).
+    expect(plan.durationSeconds).toBe(18);
     expect(plan.version).toBe(renderPlanVersion);
     expect(plan.scenes).toHaveLength(2);
     expect(plan.scenes[0]).toMatchObject({
@@ -80,9 +84,65 @@ describe("render plans", () => {
     expect(plan.scenes[1]).toMatchObject({
       assetId: "asset-2",
       startSeconds: 10,
-      durationSeconds: 10,
+      durationSeconds: 8,
       caption: "Book in seconds",
     });
+  });
+
+  it("caps scene durations to clip length so short clips do not freeze", () => {
+    const plan = createDefaultRenderPlan({
+      script,
+      assets,
+      durationSeconds: 60,
+    });
+
+    // 60s / 2 scenes = 30s each, but the clips are only 12.4s and 8s.
+    expect(plan.scenes[0].durationSeconds).toBe(12.4);
+    expect(plan.scenes[1].durationSeconds).toBe(8);
+    expect(plan.durationSeconds).toBe(20.4);
+  });
+
+  it("keeps still-image scenes at their full slot (no duration to cap)", () => {
+    const imageAssets = renderPlanAssetsFromRows([
+      {
+        id: "img-1",
+        storage_bucket: "client-assets",
+        storage_path: "organizations/org-1/assets/img-1/a.jpg",
+        filename: "a.jpg",
+        content_type: "image/jpeg",
+        duration_seconds: null,
+        tags: ["product"],
+      },
+    ]);
+    const plan = createDefaultRenderPlan({
+      script,
+      assets: imageAssets,
+      durationSeconds: 20,
+    });
+
+    expect(plan.scenes.every((scene) => scene.assetId === "img-1")).toBe(true);
+    expect(plan.durationSeconds).toBe(20);
+  });
+
+  it("stretches the composition to cover a longer voiceover", () => {
+    expect(
+      compositionDurationSeconds({
+        durationSeconds: 18,
+        voiceoverCues: [
+          { text: "hello", startSeconds: 0, endSeconds: 1 },
+          { text: "world", startSeconds: 24, endSeconds: 26.5 },
+        ],
+      }),
+    ).toBe(26.5);
+  });
+
+  it("keeps the video length when the voiceover is shorter", () => {
+    expect(
+      compositionDurationSeconds({
+        durationSeconds: 18,
+        voiceoverCues: [{ text: "hi", startSeconds: 0, endSeconds: 4 }],
+      }),
+    ).toBe(18);
   });
 
   it("sanitizes edited scenes against available asset ids", () => {
@@ -120,7 +180,8 @@ describe("render plans", () => {
     expect(plan.scenes[1]).toMatchObject({
       assetId: null,
       storagePath: null,
-      startSeconds: 10,
+      // scene 0 inherits asset-2's clip-capped 8s duration, so scene 1 starts at 8
+      startSeconds: 8,
     });
   });
 

@@ -410,6 +410,35 @@ export function isWordSyncedCaptionPreset(preset: CaptionPreset) {
   return preset === "hormozi" || preset === "karaoke";
 }
 
+// End time of the generated voiceover, inferred from the last word cue.
+export function voiceoverEndSeconds(plan: {
+  voiceoverCues: CaptionCue[] | null;
+}) {
+  if (!plan.voiceoverCues || plan.voiceoverCues.length === 0) {
+    return 0;
+  }
+
+  return plan.voiceoverCues.reduce(
+    (latest, cue) => Math.max(latest, cue.endSeconds),
+    0,
+  );
+}
+
+// How long the rendered composition should run: the video is only as long as
+// its clips ("fit to clips"), but never shorter than the voiceover, so the
+// narration is never cut off. Any gap holds the final clip.
+export function compositionDurationSeconds(plan: {
+  durationSeconds: number;
+  voiceoverCues: CaptionCue[] | null;
+}) {
+  const videoSeconds =
+    typeof plan.durationSeconds === "number" && plan.durationSeconds > 0
+      ? plan.durationSeconds
+      : defaultRenderDurationSeconds;
+
+  return roundSeconds(Math.max(videoSeconds, voiceoverEndSeconds(plan)));
+}
+
 export function isAudioRenderPlanAsset(asset: RenderPlanAsset) {
   if (asset.contentType) {
     return asset.contentType.toLowerCase().startsWith("audio/");
@@ -500,6 +529,40 @@ function allocateAsset(assets: RenderPlanAsset[], index: number) {
   return assets[index % assets.length] ?? assets[0] ?? null;
 }
 
+// How long a clip can actually play before it runs out of frames. Returns null
+// for stills (images) and assets whose duration we don't know — those hold a
+// frame on purpose and never "freeze". Video clips are capped to this so a
+// scene never outlives its footage and freezes on the last frame.
+function clipPlayableSeconds(
+  asset: RenderPlanAsset | null,
+  trimStartSeconds: number,
+  trimEndSeconds: number | null,
+) {
+  if (!asset || !asset.durationSeconds || asset.durationSeconds <= 0) {
+    return null;
+  }
+
+  const end =
+    trimEndSeconds && trimEndSeconds > 0
+      ? Math.min(trimEndSeconds, asset.durationSeconds)
+      : asset.durationSeconds;
+  const playable = end - trimStartSeconds;
+
+  return playable > 0 ? roundSeconds(playable) : null;
+}
+
+// Cap a scene's on-screen time to the footage it has, so short clips play
+// through once instead of freezing for the rest of an evenly-split slot.
+function sceneDurationForClip(allottedSeconds: number, playableSeconds: number | null) {
+  if (playableSeconds === null) {
+    return allottedSeconds;
+  }
+
+  return roundSeconds(
+    Math.max(minSceneDurationSeconds, Math.min(allottedSeconds, playableSeconds)),
+  );
+}
+
 export function resequenceRenderPlan(plan: RenderPlan): RenderPlan {
   let cursor = 0;
   const sourceScenes = plan.scenes.slice(0, maxRenderScenes);
@@ -563,6 +626,10 @@ export function createDefaultRenderPlan(input: {
   const sceneDuration = durationSeconds / Math.max(1, drafts.length);
   const scenes = drafts.map((draft, index) => {
     const asset = allocateAsset(visualAssets, index);
+    const durationForScene = sceneDurationForClip(
+      roundSeconds(sceneDuration),
+      clipPlayableSeconds(asset, 0, null),
+    );
 
     return {
       id: `scene-${index + 1}`,
@@ -573,7 +640,7 @@ export function createDefaultRenderPlan(input: {
       filename: asset?.filename ?? null,
       signedUrl: asset?.signedUrl ?? null,
       startSeconds: roundSeconds(index * sceneDuration),
-      durationSeconds: roundSeconds(sceneDuration),
+      durationSeconds: durationForScene,
       caption: draft.caption,
       visual: draft.visual,
       fit: "cover" as const,

@@ -1,6 +1,7 @@
 import { Composition } from "remotion";
 import { UGCVideo } from "./UGCVideo";
 import {
+  compositionDurationSeconds,
   defaultRenderDurationSeconds,
   renderPlanFps,
   renderPlanHeight,
@@ -71,13 +72,12 @@ export function RemotionRoot() {
       defaultProps={{ plan: defaultRemotionPlan }}
       calculateMetadata={({ props }) => {
         const plan = props.plan as RenderPlan;
-        const durationSeconds =
-          typeof plan.durationSeconds === "number" && plan.durationSeconds > 0
-            ? plan.durationSeconds
-            : defaultRenderDurationSeconds;
 
         return {
-          durationInFrames: Math.max(1, Math.round(durationSeconds * renderPlanFps)),
+          durationInFrames: Math.max(
+            1,
+            Math.round(compositionDurationSeconds(plan) * renderPlanFps),
+          ),
           props,
         };
       }}
